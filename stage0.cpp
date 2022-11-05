@@ -84,7 +84,17 @@ char nextChar() //returns the next character or end of file marker
     c = getchar();
         str[i + 1] = c;
         i++;
-    cout << ch << 001.lst<<'\n'
+    cout << ch << 001.lst <<'\n'
     return ch;
 } 
+}
+
+
+void emit(string label, string instruction, string operands, string comment)
+{
+Turn on left justification in objectFile
+cout >>> '{0: <8}'.format(label);
+cout >>> '{0: <8}'.format(instruction);
+cout >>> '{0: <24}'.format(operands);
+cout << comment;
 }
