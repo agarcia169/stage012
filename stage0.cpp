@@ -97,5 +97,18 @@ cout << '{0: <9}'.format(label);
 cout << '{0: <9}'.format(instruction);
 cout << '{0: <25}'.format(operands);
 cout << comment ;
+// probs not right 
 }
 
+void emitPrologue(string progName, string operand2)
+{
+//Output identifying comments at beginning of objectFile
+//Output the %INCLUDE directives
+cout << "#include <iostream>:" ;
+cout << "#include <fstream>";
+cout << "#include <string>";
+cout << "#include <map>";
+emit("SECTION", ".text")
+emit("global", "_start", "", "; program" + progName)
+emit("_start:")
+}
