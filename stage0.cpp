@@ -103,6 +103,7 @@ cout << comment ;
 void emitPrologue(string progName, string operand2)
 {
 //Output identifying comments at beginning of objectFile
+// ^ idk where to start here v
 //Output the %INCLUDE directives
 cout << "#include <iostream>:" ;
 cout << "#include <fstream>";
