@@ -93,9 +93,9 @@ char nextChar() //returns the next character or end of file marker
 void emit(string label, string instruction, string operands, string comment)
 {
 //Turn on left justification in objectFile
-cout >> '{0: <9}'.format(label);
-cout >> '{0: <9}'.format(instruction);
-cout >> '{0: <25}'.format(operands);
+cout << '{0: <9}'.format(label);
+cout << '{0: <9}'.format(instruction);
+cout << '{0: <25}'.format(operands);
 cout << comment ;
 }
 
