@@ -44,11 +44,14 @@ string nextToken() //returns the next token or end of file marker
 }
 char nextChar() //returns the next character or end of file marker
 {
- read in next character
- if end of file
- ch = END_OF_FILE //use a special character to designate end of file
- else
- ch = next character
- print to listing file (starting new line if necessary)
- return ch;
+ if (c =='$')
+ {
+     ch = END_OF_FILE    
+    } else{
+    c = getchar();
+        str[i + 1] = c;
+        i++;
+    cout << ch << 001.lst<<'\n'
+    return ch;
+} 
 }
