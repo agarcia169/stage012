@@ -1,7 +1,21 @@
 //Alex Garcia && Adebolanle Balogun
-//
+//Stage 0
 
 
+
+//dont forget the fuckton of include we'll need -bola
+
+
+END_OF_FILE = '$'
+
+
+//FIXME
+// needs definitions for processError
+// specifically : processError(unexpected end of file);
+//                processError(illegal symbol)
+//                processError('}' cannot begin token);
+// if the pascallite helper functions need to be written, relook at 
+// all the case statements
 
 
 string nextToken() //returns the next token or end of file marker
@@ -9,38 +23,57 @@ string nextToken() //returns the next token or end of file marker
 	token = "";
 	while (token == "")
 	{
-	switch(ch)
-	{
-	case '{' : //process comment
-	while (nextChar() is not one of END_OF_FILE, '}'}
-	{ //empty body }
-	if (ch == END_OF_FILE)
-	processError(unexpected end of file)
-	else
-	nextChar()
-	case '}' : processError('}' cannot begin token)
-	case isspace(ch) : nextChar()
-	case isSpecialSymbol(ch): token = ch;
-	nextChar()
-	case islower(ch) : token = ch;
-	while (nextChar() is one of letter, digit, or
-	'_' but not END_OF_FILE)
-	{
-	token+=ch
-	}	
-	if (ch is END_OF_FILE)
-	processError(unexpected end of file)
-	case isdigit(ch) : token = ch;
-	while (nextChar() is digit but not END_OF_FILE)
-	{
-	token+=ch
-	}
-	if (ch is END_OF_FILE)
-	processError(unexpected end of file)
-	case END_OF_FILE : token = ch
-	default : processError(illegal symbol)
-	}
- return token
+		switch(ch)
+			{
+				case '{' : //process comment
+					while (nextChar() != END_OF_FILE || '}'}
+					{
+						if (ch == END_OF_FILE)
+                         processError(unexpected end of file);
+						else
+                         nextChar()
+               }
+                   break;
+				case '}' : 
+               processError('}' cannot begin token);
+               break;            
+            
+				case isspace(ch) : 
+               nextChar();
+               break;
+				case isSpecialSymbol(ch): 
+               token = ch;
+					nextChar();
+               break;
+				case islower(ch) : 
+               token = ch;
+               // I might be fucking up here idk if this is the proper way to do it
+               String s = nextChar();
+               while (isNonKeyId(s) && != END_OF_FILE)
+                  {
+                     token+=ch
+						}	
+               if (ch == END_OF_FILE)
+                  processError(unexpected end of file)
+               break;
+            case isdigit(ch) :
+               token = ch;
+               String s = nextChar();
+               while (isInteger(s) && != END_OF_FILE)
+                  {
+                     token+=ch
+                  }
+               if (ch == END_OF_FILE)
+               processError(unexpected end of file)
+               break;
+            case END_OF_FILE : 
+               token = ch;
+               break;
+            default : 
+               processError(illegal symbol);
+            break; // this is a superstitous break, i know i probably dont need it 
+    }
+    return token
 }
 char nextChar() //returns the next character or end of file marker
 {
