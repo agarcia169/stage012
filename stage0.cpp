@@ -139,7 +139,7 @@ if (token != "begin")
 processError(keyword "begin" expected)
 beginEndStmt()
 if (token != END_OF_FILE)
-processError(no text may follow "end”)
+processError(no text may follow "end")
 }
 
 // progStmt() - production 2
