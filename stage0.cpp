@@ -158,7 +158,7 @@ void prog() //token should be "program"
    if (token == "var")
       vars();
    if (token != "begin")
-      processError("keyword \"begin\" expected")
+      processError("keyword \"begin\" expected");
    beginEndStmt();
    if (token != END_OF_FILE)
       processError("no text may follow \"end\"");
@@ -167,19 +167,19 @@ void prog() //token should be "program"
 // progStmt() - production 2
 void progStmt() //token should be "program"
    {
-      //debug
       cout << "you just entered the progstmts zone\n";
       string x;
       if (token != "program")
          processError("keyword \"program\" expected");
       x = NextToken();
       if (!isNonKeyId(x))
+      //FIXME dont know if PROG_NAME is the correct way to do this
          processError(PROG_NAME + " expected");
       nextToken();
       if (token != ";")
-         processError("\";\" expected")
+         processError("\";\" expected");
       nextToken();
-      code("program", x)
+      code("program", x);
       insert(x,PROG_NAME,CONSTANT,x,NO,0);
    }
 
@@ -188,9 +188,9 @@ void consts() //token should be "const"
 {
    cout << "you just entered the consts zone\n";
    if (token != "const")
-      processError("keyword \"const\" expected")
-   string x = nextToken();
-   if (isNonKeyId(x))
+      processError("keyword \"const\" expected");
+   nextToken();
+   if (!isNonKeyId(token))
       processError("non-keyword identifier must follow \"const\"");
    constStmts();
 }
@@ -200,10 +200,10 @@ void vars() //token should be "var"
 {
    cout << "you just entered the vars zone\n";
    if (token != "var")
-      processError("keyword \"var\" expected")
+      processError("keyword \"var\" expected");
    string x = nextToken();
-   if (isNonKeyId(x))
-      processError("non-keyword identifier must follow \"var\"")
+   if (!isNonKeyId(x))
+      processError("non-keyword identifier must follow \"var\"");
    varStmts();
 }
 
@@ -222,9 +222,9 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
    if (nextToken() != "end")
       processError("keyword \"end\" expected");
    if (nextToken() != ".")
-      processError(period expected)
-   nextToken()
-   code("end", ".")
+      processError("period expected");
+   nextToken();
+   code("end", ".");
 }
 
 //constStmts() - production 6
@@ -259,50 +259,53 @@ void constStmts() //token should be NON_KEY_ID
          processError("semicolon expected");
       if (!isInteger(y) || !isBoolean(y))
          processError("data type of token on the right-hand side must be INTEGER or BOOLEAN");
-      //FIXME
       insert(x,whichType(y),CONSTANT,whichValue(y),YES,1);
       x = nextToken();
-      //x is not one of "begin","var",NON_KEY_ID
       if (x != "begin" || x != "var" || !isNonKeyId(x))
          processError("non-keyword identifier, \"begin\", or \"var\" expected");
       if (isNonKeyId(x))
          constStmts();
    }
 
-//varStmts() - production 7 ¯\_(ツ)_/¯
+//varStmts() - production 7 
 void varStmts() //token should be NON_KEY_ID
    {
-      string x,y
-      if (token is not a NON_KEY_ID)
-         processError(NON_KEY_ID)//non-keyword identifier expected <- was orginally in ()
-      x = ids()
+      cout << "you just entered the varStmts zone\n";
+      string x,y;
+      if (!isNonKeyId(token))
+         processError("non-keyword identifier expected  ");
+      //FIXME?? 
+      x = ids();
       if (token != ":")
-         processError(":" expected)
-      if (nextToken() != "integer" || "boolean")//nextToken() is not one of "integer","boolean" <- was orginally in ()
-         processError(illegal type follows ":")
-      y = token
+         processError("\":\" expected");
+      if (nextToken() != "integer" || nextToken() != "boolean")
+         processError("illegal type follows \":\"");
+      y = token;
       if (nextToken() != ";")
-         processError(semicolon expected)
-      insert(x,y,VARIABLE,"",YES,1)
-      if (nextToken() != "begin" || NON_KEY_ID) //nextToken() is not one of "begin",NON_KEY_ID <- was orginally in ()
-         processError(NON_KEY_ID || "begin" )//non-keyword identifier or "begin" expected <- was orginally in () also added NON_KEY_ID as a placeholder
-      if (token is a NON_KEY_ID)
-      varStmts();
+         processError("semicolon expected");
+      insert(x,y,VARIABLE,"",YES,1);
+      //Double Check here to the pseudocode
+      if (nextToken() != "begin" || !isNonKeyId(nextToken()))
+         processError("non-keyword identifier or \"begin\" expected");
+      if (isNonKeyId(token))
+         varStmts();
    }
 
 //ids() - production 8
 string ids() //token should be NON_KEY_ID
    {
+      cout << "you just entered the ids zone\n";
       string temp,tempString;
-      if (token != NON_KEY_ID)
-         processError(NON_KEY_ID) // non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
-      tempString = token
-      temp = token
+      if (!isNonKeyId(token))
+         processError("non-keyword identifier expected");
+      tempString = token;
+      temp = token;
       if (nextToken() == ",")
          {
-            if (nextToken() != NON_KEY_ID)
-               processError(NON_KEY_ID)// non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
-            tempString = temp + "," + ids()
+            if (!isNonKeyId(nextToken()))
+               processError("non-keyword identifier expected")
+            //check string concat rules here, idk if this works
+            tempString = temp + "," + ids();
          }
       return tempString;
    }
