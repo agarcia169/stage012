@@ -27,15 +27,18 @@ END_OF_FILE = '$'
 
 Compiler(char **argv) // constructor
    {
-      open sourceFile using argv[1]
-      open listingFile using argv[2]
-      open objectFile using argv[3]
+      sourceFile.open(argv[1]);
+      listingFile.open(argv[2]);
+      objectFile.open(argv[3]);
    }
    
 ~Compiler() // destructor
    {
-      close all open files
+      sourceFile.close();
+      listingFile.close();
+      objectFile.close();
    }
+
 void createListingHeader()
    {
       time_t now = time (NULL);
@@ -43,6 +46,7 @@ void createListingHeader()
       cout << "LINE NO:               " << "SOURCE STATEMENT\n";
       //line numbers and source statements should be aligned under the headings
    }
+
 void parser()
 {
    nextChar()
