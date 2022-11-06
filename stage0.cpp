@@ -236,18 +236,18 @@ void varStmts() //token should be NON_KEY_ID
 {
 string x,y
 if (token is not a NON_KEY_ID)
-processError(non-keyword identifier expected)
+processError(NON_KEY_ID)//non-keyword identifier expected <- was orginally in ()
 x = ids()
 if (token != ":")
 processError(":" expected)
-if (nextToken() is not one of "integer","boolean")
+if (nextToken() != "integer" || "boolean")//nextToken() is not one of "integer","boolean" <- was orginally in ()
 processError(illegal type follows ":")
 y = token
 if (nextToken() != ";")
 processError(semicolon expected)
 insert(x,y,VARIABLE,"",YES,1)
-if (nextToken() is not one of "begin",NON_KEY_ID)
-processError(non-keyword identifier or "begin" expected)
+if (nextToken() != "begin" || NON_KEY_ID) //nextToken() is not one of "begin",NON_KEY_ID <- was orginally in ()
+processError(NON_KEY_ID || "begin" )//non-keyword identifier or "begin" expected <- was orginally in () also added NON_KEY_ID as a placeholder
 if (token is a NON_KEY_ID)
 varStmts()
 }
@@ -255,15 +255,15 @@ varStmts()
 //ids() - production 8
 string ids() //token should be NON_KEY_ID
 {
-string temp,tempString
-if (token is not a NON_KEY_ID)
-processError(non-keyword identifier expected)
+string temp,tempString ; // i added this semicolon idk if its even needed
+if (token != NON_KEY_ID)
+processError(NON_KEY_ID) // non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder
 tempString = token
 temp = token
 If (nextToken() == ",")
 {
-if (nextToken() is not a NON_KEY_ID)
-processError(non-keyword identifier expected)
+if (nextToken() != NON_KEY_ID)
+processError(NON_KEY_ID)// non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder
 tempString = temp + "," + ids()
 }
 return tempString
@@ -351,7 +351,7 @@ cout << '{0: <9}'.format(label);
 cout << '{0: <9}'.format(instruction);
 cout << '{0: <25}'.format(operands);
 cout << comment ;
-// probs not right 
+// probs not right idk wtf is goin on
 }
 
 void emitPrologue(string progName, string operand2)
