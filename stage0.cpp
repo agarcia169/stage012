@@ -181,6 +181,12 @@ varStmts()
 
 // beginEndStmt() - production 5
 void beginEndStmt() //token should be "begin"
+/*
+string token()
+for (string::iterator it = token.begin(); it != token.end; ++it)
+   cout << *it << '\n'
+   just realized this would just loop through the whole string but if edited will give you the begining of the string i hope
+*/
 {
 if (token != "begin")
 procesError(keyword "begin" expected)
