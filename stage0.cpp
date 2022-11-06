@@ -445,12 +445,43 @@ bool isKeyword(string s) // determines if s is a keyword
    }
 
 bool isSpecialSymbol(char c) // determines if c is a special symbol
-   {
-      if () {
-         //code here... maybe
+   {// not sure if this is what is meant by special symbol
+      switch (c) {
+         case '!':
          return true
+         break;
+         case '@':
+         return true
+         break;
+         case '#':
+         return true
+         break;
+         case '$':
+         return true
+         break;
+         case '%':
+         return true
+         break;   
+         case '^':
+         return true
+         break;   
+         case '&':
+         return true
+         break;   
+         case '*':
+         return true
+         break;      
+         case '+':
+         return true
+         break;
+         case '=':
+         return true
+         break;
+         default:
+         return false // if it is not a special symbol   
+         break;   
+
       }
-      return false;
    }
 
 bool isNonKeyId(string s) // determines if s is a non_key_id
