@@ -151,28 +151,33 @@ processError(no text may follow "end")
 
 // progStmt() - production 2
 void progStmt() //token should be "program"
-{
-string x
-if (token != "program")
-processError(keyword "program" expected)
-x = NextToken()
-if (token is not a NON_KEY_ID)
-processError(program name expected)
-if (nextToken() != ";")
-processError(semicolon expected)
-nextToken()
-code("program", x)
-insert(x,PROG_NAME,CONSTANT,x,NO,0)
-}
+   {
+      //debug
+      cout << "you just entered the progstmts zone\n";
+      string x;
+      if (token != "program") // FIXME sourceFile.eof() == , then something else?
+         processError("keyword \"program\" expected");
+      x = NextToken();
+      if (isNonKeyId(x))
+         processError(PROG_NAME + " expected");
+      nextToken();
+      if (token != ";")
+         processError("\";\" expected")
+      nextToken();
+      code("program", x)
+      insert(x,PROG_NAME,CONSTANT,x,NO,0);
+   }
 
 //consts() - production 3
 void consts() //token should be "const"
 {
-if (token != "const")
-processError(keyword "const" expected)
-if (nextToken() is not a NON_KEY_ID)
-processError(non-keyword identifier must follow "const")
-constStmts()
+   cout << "you just entered the consts zone\n";
+   if (token != "const")
+      processError("keyword \"const\" expected")
+   string x = NextToken();
+   if (isNonKeyId(x))
+      processError("non-keyword identifier must follow \"const\"");
+      constStmts();
 }
 
 // vars() - production 4
