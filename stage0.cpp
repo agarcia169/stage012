@@ -175,20 +175,21 @@ void consts() //token should be "const"
    cout << "you just entered the consts zone\n";
    if (token != "const")
       processError("keyword \"const\" expected")
-   string x = NextToken();
+   string x = nextToken();
    if (isNonKeyId(x))
       processError("non-keyword identifier must follow \"const\"");
-      constStmts();
+   constStmts();
 }
 
 // vars() - production 4
 void vars() //token should be "var"
 {
-if (token != "var")
-processError(keyword "var" expected)
-if (nextToken() is not a NON_KEY_ID)
-processError(non-keyword identifier must follow "var")
-varStmts()
+   if (token != "var")
+      processError("keyword \"var\" expected")
+   string x = nextToken();
+   if (isNonKeyId(x))
+      processError("non-keyword identifier must follow \"var\"")
+   varStmts();
 }
 
 // beginEndStmt() - production 5 ¯\_(ツ)_/¯
