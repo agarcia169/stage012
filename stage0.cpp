@@ -84,7 +84,7 @@ allocation inAlloc, int inUnits)
       //symbolTable[name] is defined
       //so would this work?
       //also would the class name notation be correct
-      //FIXME
+      //FIXME how do we compare external and internal names?
       if (SymbolTableEntry.getInternalName(name))
          processError("multiple name definition")
       else if (isKeyword(name))
@@ -105,43 +105,44 @@ allocation inAlloc, int inUnits)
 
 
 storeTypes whichType(string name) //tells which data type a name has
-{
-if (name is a literal)
-if (name is a boolean literal)
-data type = BOOLEAN
-else
-data type = INTEGER
-else //name is an identifier and hopefully a constant
-if (symbolTable[name] is defined)
-data type = type of symbolTable[name]
-else
-processError(reference to undefined constant)
-return data type
-}
+   {
+      if (name is a literal)
+         if (name is a boolean literal)
+            data type = BOOLEAN
+         else
+            data type = INTEGER
+      else //name is an identifier and hopefully a constant
+         if (symbolTable[name] is defined)
+            data type = type of symbolTable[name]
+         else
+            processError(reference to undefined constant)
+      return data type
+   }
+
+
 string whichValue(string name) //tells which value a name has
-{
-if (name is a literal)
-value = name
-else //name is an identifier and hopefully a constant
-if (symbolTable[name] is defined and has a value)
-value = value of symbolTable[name]
-else
-processError(reference to undefined constant)
-return value
-}
+   {
+      if (name is a literal)
+         value = name
+      else //name is an identifier and hopefully a constant
+         if (symbolTable[name] is defined and has a value)
+            value = value of symbolTable[name]
+         else
+            processError(reference to undefined constant)
+      return value
+   }
 
 
 
 void code(string op, string operand1, string operand2)
-{
-if (op == "program")
-emitPrologue(operand1)
-else if (op == "end")
-emitEpilogue()
-else
-processError(compiler error since function code should not be called with
-illegal arguments)
-}
+   {
+      if (op == "program")
+         emitPrologue(operand1)
+      else if (op == "end")
+         emitEpilogue()
+      else
+         processError(compiler error since function code should not be called with illegal arguments)
+   }
 
 
 
@@ -382,59 +383,101 @@ char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 
 
 void emit(string label, string instruction, string operands, string comment)
-{
-//Turn on left justification in objectFile
-cout << '{0: <9}'.format(label);
-cout << '{0: <9}'.format(instruction);
-cout << '{0: <25}'.format(operands);
-cout << comment ;
-// probs not right idk wtf is goin on
-}
+   {
+      //Turn on left justification in objectFile
+      cout << '{0: <9}'.format(label);
+      cout << '{0: <9}'.format(instruction);
+      cout << '{0: <25}'.format(operands);
+      cout << comment ;
+      // probs not right idk wtf is goin on
+   }
 
 void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
-{
-//Output identifying comments at beginning of objectFile
-cout << "Alex Garcia && Adebolanle Balogun"
-// ^ idk where to start here v
-//Output the %INCLUDE directives
-cout << "#include <iostream>:" ;
-cout << "#include <fstream>";
-cout << "#include <string>";
-cout << "#include <map>";
-emit("SECTION", ".text")
-emit("global", "_start", "", "; program" + progName)
-emit("_start:")
-}
+   {
+      //Output identifying comments at beginning of objectFile
+      cout << "Alex Garcia && Adebolanle Balogun"
+      // ^ idk where to start here v
+      //Output the %INCLUDE directives
+      cout << "#include <iostream>:" ;
+      cout << "#include <fstream>";
+      cout << "#include <string>";
+      cout << "#include <map>";
+      emit("SECTION", ".text")
+      emit("global", "_start", "", "; program" + progName)
+      emit("_start:")
+   }
 
 
 void emitEpilogue(string operand1, string operand2)
-{
-emit("","Exit", "{0}");
-emitStorage();
-}
+   {
+      emit("","Exit", "{0}");
+      emitStorage();
+   }
 
 
 void emitStorage()
-{
-emit("SECTION", ".data")
-for those entries in the symbolTable that have
-an allocation of YES and a storage mode of CONSTANT
-{ call emit to output a line to objectFile }
-emit("SECTION", ".bss")
-for those entries in the symbolTable that have
-an allocation of YES and a storage mode of VARIABLE
-{ call emit to output a line to objectFile }
-}
+   {
+      emit("SECTION", ".data")
+      for those entries in the symbolTable that have
+      an allocation of YES and a storage mode of CONSTANT
+      { call emit to output a line to objectFile }
+      emit("SECTION", ".bss")
+      for those entries in the symbolTable that have
+      an allocation of YES and a storage mode of VARIABLE
+      { call emit to output a line to objectFile }
+   }
 
 
-bool isKeyword(string s) const;  // determines if s is a keyword
+bool isKeyword(string s) // determines if s is a keyword
+   {
+      if () {
+         //code here... maybe
+         return true
+      }
+      return false;
+   }
 
-bool isSpecialSymbol(char c) const; // determines if c is a special symbol
+bool isSpecialSymbol(char c) // determines if c is a special symbol
+   {
+      if () {
+         //code here... maybe
+         return true
+      }
+      return false;
+   }
 
-bool isNonKeyId(string s) const; // determines if s is a non_key_id
+bool isNonKeyId(string s) // determines if s is a non_key_id
+   {
+      if () {
+         //code here... maybe
+         return true
+      }
+      return false;
+   }
 
-bool isInteger(string s) const;  // determines if s is an integer
+bool isInteger(string s) // determines if s is an integer
+   {
+      if () {
+         //code here... maybe
+         return true
+      }
+      return false;
+   }
 
-bool isBoolean(string s) const;  // determines if s is a boolean
+bool isBoolean(string s) // determines if s is a boolean
+   {
+      if () {
+         //code here... maybe
+         return true
+      }
+      return false;
+   }
 
-bool isLiteral(string s) const;  // determines if s is a literal
+bool isLiteral(string s) // determines if s is a literal
+   {
+      if () {
+         //code here... maybe
+         return true
+      }
+      return false;
+   }
