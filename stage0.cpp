@@ -453,11 +453,18 @@ bool isSpecialSymbol(char c) // determines if c is a special symbol
 
 bool isNonKeyId(string s) // determines if s is a non_key_id
    {
-      if () {
-         //code here... maybe
-         return true
+      if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) { //checking if the first character is valid
+         
+         return false
       }
-      return false;
+      //run through rest of string
+      for (int i = 1; i < s.length(); i++) {
+         if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) { //checking if the first character is valid
+         
+         return false
+      }
+      }
+      return true; //should return true if s is a nonkeyid
    }
 
 bool isInteger(string s) // determines if s is an integer
