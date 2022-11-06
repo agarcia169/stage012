@@ -22,6 +22,7 @@ END_OF_FILE = '$'
 // if the pascallite helper functions need to be written, relook at 
 // all the case statements
 // @ createListingHeader() do SOURCESTATEMENT need to be literal or a var?
+// #ofErrors var needed
 
 
 
@@ -48,20 +49,20 @@ void createListingHeader()
    }
 
 void parser()
-{
-   nextChar();
-   //FIXME HERE
-   ch must be initialized to the first character of the source file
-   if (nextToken() != "program")
-      processError("keyword \"program\" expected")
-         //a call to nextToken() has two effects
-         // (1) the variable, token, is assigned the value of the next token
-         // (2) the next token is read from the source file in order to make
-         // the assignment. The value returned by nextToken() is also
-         // the next token.
-   prog();
-      //parser implements the grammar rules, calling first rule
-}
+   {
+      nextChar();
+      //FIXME HERE
+      ch must be initialized to the first character of the source file
+      if (nextToken() != "program")
+         processError("keyword \"program\" expected")
+            //a call to nextToken() has two effects
+            // (1) the variable, token, is assigned the value of the next token
+            // (2) the next token is read from the source file in order to make
+            // the assignment. The value returned by nextToken() is also
+            // the next token.
+      prog();
+         //parser implements the grammar rules, calling first rule
+   }
 void createListingTrailer()
    {
       cout << "COMPILATION TERMINATED " << #ofErrors <<  " ERRORS ENCOUNTERED\n";
@@ -76,8 +77,9 @@ void processError(string err)
 void insert(string externalName,storeType inType, modes inMode, string inValue,
 allocation inAlloc, int inUnits)
 
-//create symbol table entry for each identifier in list of external names
 {
+   cout << "you just entered the prog zone\n";
+   
    string name = externalName;
    while (name != "")
    {
@@ -137,11 +139,11 @@ string whichValue(string name) //tells which value a name has
 void code(string op, string operand1, string operand2)
    {
       if (op == "program")
-         emitPrologue(operand1)
+         emitPrologue(operand1);
       else if (op == "end")
-         emitEpilogue()
+         emitEpilogue();
       else
-         processError(compiler error since function code should not be called with illegal arguments)
+         processError("compiler error since function code should not be called with illegal arguments");
    }
 
 
