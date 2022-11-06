@@ -49,11 +49,11 @@ void createListingHeader()
 
 void parser()
 {
-   nextChar()
+   nextChar();
    //FIXME HERE
    ch must be initialized to the first character of the source file
    if (nextToken() != "program")
-      processError(keyword "program" expected)
+      processError("keyword \"program\" expected")
          //a call to nextToken() has two effects
          // (1) the variable, token, is assigned the value of the next token
          // (2) the next token is read from the source file in order to make
@@ -77,23 +77,29 @@ void insert(string externalName,storeType inType, modes inMode, string inValue,
 allocation inAlloc, int inUnits)
 
 //create symbol table entry for each identifier in list of external names
-//Multiply inserted names are illegal
 {
-   string name
-   while (name broken from list of external names and put into name != "")
+   string name = externalName;
+   while (name != "")
    {
-   if (symbolTable[name] is defined)
-   processError(multiple name definition)
-   else if (name is a keyword)
-   processError(illegal use of keyword)
-   else //create table entry
-   {
-   if (name begins with uppercase)
-   symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
-   else
-   symbolTable[name]=(genInternalName(inType),inType,inMode,inValue,
-   inAlloc,inUnits)
-   }
+      //symbolTable[name] is defined
+      //so would this work?
+      //also would the class name notation be correct
+      //FIXME
+      if (SymbolTableEntry.getInternalName(name))
+         processError("multiple name definition")
+      else if (isKeyword(name))
+         processError("illegal use of keyword")
+      else //create table entry
+         {
+            if (isUpper(name[0]))
+               symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
+            else
+            //does this:                                 
+               symbolTable[name]=(genInternalName(inType),inType,inMode,inValue,
+                                 inAlloc,inUnits)
+            // need to be this?:
+            // symbolTable[name] = SymbolTableEntry.SymbolTableEntry(genInternalName(inType),inType,inMode,inValue,inAlloc,inUnits)
+         }
    }
 }
 
@@ -166,7 +172,7 @@ void progStmt() //token should be "program"
       if (token != "program")
          processError("keyword \"program\" expected");
       x = NextToken();
-      if (isNonKeyId(x))
+      if (!isNonKeyId(x))
          processError(PROG_NAME + " expected");
       nextToken();
       if (token != ";")
@@ -221,81 +227,81 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
 
 //constStmts() - production 6
 void constStmts() //token should be NON_KEY_ID
-{
-string x,y
-if (token is not a NON_KEY_ID)
-processError(non-keyword identifier expected)
-x = token
-if (nextToken() != "=")
-processError("=" expected)
-y = nextToken()
-if (y is not one of "+","-","not",NON_KEY_ID,"true","false",INTEGER)
-processError(token to right of "=" illegal)
-if (y is one of "+","-")
-{
-if (nextToken() is not an INTEGER)
-processError(integer expected after sign)
-y = y + token;
-}
-if (y == "not")
-{
-if (nextToken() is not a BOOLEAN)
-processError(boolean expected after “not”)
-if (token == "true")
-y = "false"
-else
-y = "true"
-}
-if (nextToken() != ";")
-processError(semicolon expected)
-if (the data type of y is not INTEGER or BOOLEAN)
-processError(data type of token on the right-hand side must be INTEGER or
-BOOLEAN)
-insert(x,whichType(y),CONSTANT,whichValue(y),YES,1)
-x = nextToken()
-if (x is not one of "begin","var",NON_KEY_ID)
-processError(non-keyword identifier, "begin", or "var" expected)
-if (x is a NON_KEY_ID)
-constStmts()
-}
+   {
+      string x,y
+      if (token is not a NON_KEY_ID)
+         processError(non-keyword identifier expected)
+      x = token
+      if (nextToken() != "=")
+         processError("=" expected)
+      y = nextToken()
+      if (y is not one of "+","-","not",NON_KEY_ID,"true","false",INTEGER)
+         processError(token to right of "=" illegal)
+      if (y is one of "+","-")
+         {
+            if (nextToken() is not an INTEGER)
+               processError(integer expected after sign)
+            y = y + token;
+         }
+      if (y == "not")
+         {
+            if (nextToken() is not a BOOLEAN)
+               processError(boolean expected after “not”)
+            if (token == "true")
+               y = "false"
+            else
+               y = "true"
+         }
+      if (nextToken() != ";")
+         processError(semicolon expected)
+      if (the data type of y is not INTEGER or BOOLEAN)
+         processError(data type of token on the right-hand side must be INTEGER or BOOLEAN)
+
+      insert(x,whichType(y),CONSTANT,whichValue(y),YES,1)
+      x = nextToken()
+      if (x is not one of "begin","var",NON_KEY_ID)
+         processError(non-keyword identifier, "begin", or "var" expected)
+      if (x is a NON_KEY_ID)
+         constStmts();
+   }
 
 //varStmts() - production 7 ¯\_(ツ)_/¯
 void varStmts() //token should be NON_KEY_ID
-{
-string x,y
-if (token is not a NON_KEY_ID)
-processError(NON_KEY_ID)//non-keyword identifier expected <- was orginally in ()
-x = ids()
-if (token != ":")
-processError(":" expected)
-if (nextToken() != "integer" || "boolean")//nextToken() is not one of "integer","boolean" <- was orginally in ()
-processError(illegal type follows ":")
-y = token
-if (nextToken() != ";")
-processError(semicolon expected)
-insert(x,y,VARIABLE,"",YES,1)
-if (nextToken() != "begin" || NON_KEY_ID) //nextToken() is not one of "begin",NON_KEY_ID <- was orginally in ()
-processError(NON_KEY_ID || "begin" )//non-keyword identifier or "begin" expected <- was orginally in () also added NON_KEY_ID as a placeholder
-if (token is a NON_KEY_ID)
-varStmts()
-}
+   {
+      string x,y
+      if (token is not a NON_KEY_ID)
+         processError(NON_KEY_ID)//non-keyword identifier expected <- was orginally in ()
+      x = ids()
+      if (token != ":")
+         processError(":" expected)
+      if (nextToken() != "integer" || "boolean")//nextToken() is not one of "integer","boolean" <- was orginally in ()
+         processError(illegal type follows ":")
+      y = token
+      if (nextToken() != ";")
+         processError(semicolon expected)
+      insert(x,y,VARIABLE,"",YES,1)
+      if (nextToken() != "begin" || NON_KEY_ID) //nextToken() is not one of "begin",NON_KEY_ID <- was orginally in ()
+         processError(NON_KEY_ID || "begin" )//non-keyword identifier or "begin" expected <- was orginally in () also added NON_KEY_ID as a placeholder
+      if (token is a NON_KEY_ID)
+      varStmts();
+   }
 
 //ids() - production 8
 string ids() //token should be NON_KEY_ID
-{
-string temp,tempString ; // i added this semicolon idk if its even needed
-if (token != NON_KEY_ID)
-processError(NON_KEY_ID) // non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
-tempString = token
-temp = token
-If (nextToken() == ",")
-{
-if (nextToken() != NON_KEY_ID)
-processError(NON_KEY_ID)// non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
-tempString = temp + "," + ids()
-}
-return tempString
-}
+   {
+      string temp,tempString;
+      if (token != NON_KEY_ID)
+         processError(NON_KEY_ID) // non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
+      tempString = token
+      temp = token
+      if (nextToken() == ",")
+         {
+            if (nextToken() != NON_KEY_ID)
+               processError(NON_KEY_ID)// non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
+            tempString = temp + "," + ids()
+         }
+      return tempString;
+   }
 
 
 
@@ -359,16 +365,16 @@ string nextToken() //returns the next token or end of file marker
 }
 char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
-   if (c =='$')
-      {
+   get the next character
+   if (ch =='$') {
          ch = END_OF_FILE    
-      } else{
-         c = getchar();
-         str[i + 1] = c;
-         i++;
-         cout << ch << 001.lst <<'\n'
-         return ch;
-      } 
+   } else {
+      ch = getchar();
+               str[i + 1] = c;
+               i++;
+               cout << ch << 001.lst <<'\n'
+               return ch;
+            } 
 }
 
 
