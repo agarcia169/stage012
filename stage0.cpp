@@ -459,7 +459,7 @@ bool isNonKeyId(string s) // determines if s is a non_key_id
       }
       //run through rest of string
       for (int i = 1; i < s.length(); i++) {
-         if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) { //checking if the first character is valid
+         if (!((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9') || s[i] == ' ')) { //checking if the first character is valid
          
          return false
       }
