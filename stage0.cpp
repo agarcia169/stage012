@@ -185,7 +185,7 @@ processError(non-keyword identifier must follow "var")
 varStmts()
 }
 
-// beginEndStmt() - production 5
+// beginEndStmt() - production 5 ¯\_(ツ)_/¯
 void beginEndStmt() //token should be "begin"
 /*
 string token()
@@ -244,7 +244,7 @@ if (x is a NON_KEY_ID)
 constStmts()
 }
 
-//varStmts() - production 7
+//varStmts() - production 7 ¯\_(ツ)_/¯
 void varStmts() //token should be NON_KEY_ID
 {
 string x,y
@@ -270,13 +270,13 @@ string ids() //token should be NON_KEY_ID
 {
 string temp,tempString ; // i added this semicolon idk if its even needed
 if (token != NON_KEY_ID)
-processError(NON_KEY_ID) // non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder
+processError(NON_KEY_ID) // non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
 tempString = token
 temp = token
 If (nextToken() == ",")
 {
 if (nextToken() != NON_KEY_ID)
-processError(NON_KEY_ID)// non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder
+processError(NON_KEY_ID)// non keyword id needs to be put in parameter, also added NON_KEY_ID as a placeholder ¯\_(ツ)_/¯
 tempString = temp + "," + ids()
 }
 return tempString
@@ -342,7 +342,7 @@ string nextToken() //returns the next token or end of file marker
     }
     return token
 }
-char nextChar() //returns the next character or end of file marker
+char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
    if (c =='$')
       {
@@ -367,7 +367,7 @@ cout << comment ;
 // probs not right idk wtf is goin on
 }
 
-void emitPrologue(string progName, string operand2)
+void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
 {
 //Output identifying comments at beginning of objectFile
 cout << "Alex Garcia && Adebolanle Balogun"
