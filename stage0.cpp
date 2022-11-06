@@ -136,18 +136,18 @@ illegal arguments)
 //prog() - production 1
 void prog() //token should be "program"
 {
-if (token != "program")
-processError(keyword "program" expected)
-progStmt()
-if (token == "const")
-consts()
-if (token == "var")
-vars()
-if (token != "begin")
-processError(keyword "begin" expected)
-beginEndStmt()
-if (token != END_OF_FILE)
-processError(no text may follow "end")
+   if (token != "program")
+      processError("keyword \"program\" expected");
+   progStmt();
+   if (token == "const")
+      consts();
+   if (token == "var")
+      vars();
+   if (token != "begin")
+      processError("keyword \"begin\" expected")
+   beginEndStmt();
+   if (token != END_OF_FILE)
+      processError("no text may follow \"end\"");
 }
 
 // progStmt() - production 2
