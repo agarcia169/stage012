@@ -478,7 +478,7 @@ bool isInteger(string s) // determines if s is an integer
 
 bool isBoolean(string s) // determines if s is a boolean
    {
-      if () {
+      if (s == s) { // idk what to put here i looked up some examples and a lot of them pointed to this way
          //code here... maybe
          return true
       }
