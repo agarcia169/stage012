@@ -4,7 +4,11 @@
 
 
 //dont forget the fuckton of include we'll need -bola
+#include <ctime>
+#include <iostream>
 
+
+using namespace std;
 
 END_OF_FILE = '$'
 
@@ -16,40 +20,42 @@ END_OF_FILE = '$'
 //                processError('}' cannot begin token);
 // if the pascallite helper functions need to be written, relook at 
 // all the case statements
-// all the emit functions idk if those were done correctly the 2/4 i did
-
+// @ createListingHeader() do SOURCESTATEMENT need to be literal or a var?
 
 
 
 Compiler(char **argv) // constructor
-{
-open sourceFile using argv[1]
-open listingFile using argv[2]
-open objectFile using argv[3]
-}
+   {
+      open sourceFile using argv[1]
+      open listingFile using argv[2]
+      open objectFile using argv[3]
+   }
+   
 ~Compiler() // destructor
-{
-close all open files
-}
+   {
+      close all open files
+   }
 void createListingHeader()
-{
-print "STAGE0:", name(s), DATE, TIME OF DAY
-print "LINE NO:", "SOURCE STATEMENT"
-//line numbers and source statements should be aligned under the headings
-}
+   {
+      time_t now = time (NULL);
+      cout << "STAGE0:  Alex Garcia & Adebolanle Balogun" << ctime(&now) << "\n";
+      cout << "LINE NO:               " << "SOURCE STATEMENT\n";
+      //line numbers and source statements should be aligned under the headings
+   }
 void parser()
 {
-nextChar()
-//ch must be initialized to the first character of the source file
-if (nextToken() != "program")
-processError(keyword "program" expected)
-//a call to nextToken() has two effects
-// (1) the variable, token, is assigned the value of the next token
-// (2) the next token is read from the source file in order to make
-// the assignment. The value returned by nextToken() is also
-// the next token.
-prog()
-//parser implements the grammar rules, calling first rule
+   nextChar()
+   //FIXME HERE
+   ch must be initialized to the first character of the source file
+   if (nextToken() != "program")
+      processError(keyword "program" expected)
+         //a call to nextToken() has two effects
+         // (1) the variable, token, is assigned the value of the next token
+         // (2) the next token is read from the source file in order to make
+         // the assignment. The value returned by nextToken() is also
+         // the next token.
+   prog()
+      //parser implements the grammar rules, calling first rule
 }
 void createListingTrailer()
 {
