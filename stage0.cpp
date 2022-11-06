@@ -16,6 +16,7 @@ END_OF_FILE = '$'
 //                processError('}' cannot begin token);
 // if the pascallite helper functions need to be written, relook at 
 // all the case statements
+// all the emit functions idk if those were done correctly the 2/4 i did
 
 
 
