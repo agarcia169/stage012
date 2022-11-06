@@ -7,6 +7,8 @@
 #include <ctime>
 #include <iostream>
 #include <ctype.h>
+#include <iostream>
+#include <vector>
 // test 
 
 using namespace std;
@@ -487,7 +489,7 @@ bool isBoolean(string s) // determines if s is a boolean
 
 bool isLiteral(string s) // determines if s is a literal
    {
-      if () {
+      if (s.begin() == '"' && s.end() == '"') {
          //code here... maybe
          return true
       }
