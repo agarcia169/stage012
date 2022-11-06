@@ -55,40 +55,42 @@ void parser()
          // (2) the next token is read from the source file in order to make
          // the assignment. The value returned by nextToken() is also
          // the next token.
-   prog()
+   prog();
       //parser implements the grammar rules, calling first rule
 }
 void createListingTrailer()
-{
-print "COMPILATION TERMINATED", "# ERRORS ENCOUNTERED"
-}
-Void processError(string err)
-{
-Output err to listingFile
-Call exit() to terminate program
-}
+   {
+      cout << "COMPILATION TERMINATED " << #ofErrors <<  " ERRORS ENCOUNTERED\n";
+   }
 
+void processError(string err)
+   {
+      Output err to listingFile
+      Call exit() to terminate program
+   }
 
 void insert(string externalName,storeType inType, modes inMode, string inValue,
 allocation inAlloc, int inUnits)
+
 //create symbol table entry for each identifier in list of external names
 //Multiply inserted names are illegal
 {
-string name
-while (name broken from list of external names and put into name != "")
-{
-if (symbolTable[name] is defined)
-processError(multiple name definition)
-else if (name is a keyword)
-processError(illegal use of keyword)
-else //create table entry
-{
-if (name begins with uppercase)
-symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
-else
-symbolTable[name]=(genInternalName(inType),inType,inMode,inValue,
-inAlloc,inUnits)
-}
+   string name
+   while (name broken from list of external names and put into name != "")
+   {
+   if (symbolTable[name] is defined)
+   processError(multiple name definition)
+   else if (name is a keyword)
+   processError(illegal use of keyword)
+   else //create table entry
+   {
+   if (name begins with uppercase)
+   symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
+   else
+   symbolTable[name]=(genInternalName(inType),inType,inMode,inValue,
+   inAlloc,inUnits)
+   }
+   }
 }
 
 
@@ -157,7 +159,7 @@ void progStmt() //token should be "program"
       //debug
       cout << "you just entered the progstmts zone\n";
       string x;
-      if (token != "program") // FIXME sourceFile.eof() == , then something else?
+      if (token != "program")
          processError("keyword \"program\" expected");
       x = NextToken();
       if (isNonKeyId(x))
@@ -203,14 +205,14 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
    just realized this would just loop through the whole string but if edited will give you the begining of the string i hope
 */
 {
-if (token != "begin")
-procesError(keyword "begin" expected)
-if (nextToken() != "end")
-processError(keyword "end" expected)
-if (nextToken() != ".")
-processError(period expected)
-nextToken()
-code("end", ".")
+   if (token != "begin")
+      procesError("keyword \"begin\" expected");
+   if (nextToken() != "end")
+      processError("keyword \"end\" expected");
+   if (nextToken() != ".")
+      processError(period expected)
+   nextToken()
+   code("end", ".")
 }
 
 //constStmts() - production 6
@@ -410,3 +412,16 @@ for those entries in the symbolTable that have
 an allocation of YES and a storage mode of VARIABLE
 { call emit to output a line to objectFile }
 }
+
+
+bool isKeyword(string s) const;  // determines if s is a keyword
+
+bool isSpecialSymbol(char c) const; // determines if c is a special symbol
+
+bool isNonKeyId(string s) const; // determines if s is a non_key_id
+
+bool isInteger(string s) const;  // determines if s is an integer
+
+bool isBoolean(string s) const;  // determines if s is a boolean
+
+bool isLiteral(string s) const;  // determines if s is a literal
