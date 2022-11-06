@@ -6,7 +6,7 @@
 //dont forget the fuckton of include we'll need -bola
 #include <ctime>
 #include <iostream>
-
+#include <ctype.h>
 // test 
 
 using namespace std;
@@ -462,12 +462,12 @@ bool isNonKeyId(string s) // determines if s is a non_key_id
 
 bool isInteger(string s) // determines if s is an integer
    {
-      if () {
-         //code here... maybe
-         return true
-      }
-      return false;
-   }
+      if (isdigit(s[i]) == false) {
+         return false
+      } else{return true}  
+   }   
+      
+   
 
 bool isBoolean(string s) // determines if s is a boolean
    {
