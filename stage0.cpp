@@ -215,6 +215,7 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
    just realized this would just loop through the whole string but if edited will give you the begining of the string i hope
 */
 {
+   cout << "you just entered the beginEndStmt zone\n";
    if (token != "begin")
       procesError("keyword \"begin\" expected");
    if (nextToken() != "end")
@@ -228,40 +229,42 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
 //constStmts() - production 6
 void constStmts() //token should be NON_KEY_ID
    {
-      string x,y
-      if (token is not a NON_KEY_ID)
-         processError(non-keyword identifier expected)
-      x = token
+      cout << "you just entered the constStmts zone\n";
+      string x,y;
+      if (!isNonKeyId(token))
+         processError("non-keyword identifier expected");
+      x = token;
       if (nextToken() != "=")
-         processError("=" expected)
-      y = nextToken()
-      if (y is not one of "+","-","not",NON_KEY_ID,"true","false",INTEGER)
-         processError(token to right of "=" illegal)
-      if (y is one of "+","-")
+         processError("\"=\" expected");
+      y = nextToken();
+      if (y != "+" || y !=  "-" || y != "not" || !isNonKeyId(y) || y != "true" || y != "false" || !isInteger(y))
+         processError("token to right of \"=\" illegal");
+      if (y == "+" || y == "-")
          {
-            if (nextToken() is not an INTEGER)
-               processError(integer expected after sign)
+            if (!isInteger(nextToken()))
+               processError("integer expected after sign");
             y = y + token;
          }
       if (y == "not")
          {
-            if (nextToken() is not a BOOLEAN)
-               processError(boolean expected after “not”)
+            if (!isBoolean(nextToken()))
+               processError("boolean expected after \"not\"");
             if (token == "true")
-               y = "false"
+               y = "false";
             else
-               y = "true"
+               y = "true";
          }
       if (nextToken() != ";")
-         processError(semicolon expected)
-      if (the data type of y is not INTEGER or BOOLEAN)
-         processError(data type of token on the right-hand side must be INTEGER or BOOLEAN)
-
-      insert(x,whichType(y),CONSTANT,whichValue(y),YES,1)
-      x = nextToken()
-      if (x is not one of "begin","var",NON_KEY_ID)
-         processError(non-keyword identifier, "begin", or "var" expected)
-      if (x is a NON_KEY_ID)
+         processError("semicolon expected");
+      if (!isInteger(y) || !isBoolean(y))
+         processError("data type of token on the right-hand side must be INTEGER or BOOLEAN");
+      //FIXME
+      insert(x,whichType(y),CONSTANT,whichValue(y),YES,1);
+      x = nextToken();
+      //x is not one of "begin","var",NON_KEY_ID
+      if (x != "begin" || x != "var" || !isNonKeyId(x))
+         processError("non-keyword identifier, \"begin\", or \"var\" expected");
+      if (isNonKeyId(x))
          constStmts();
    }
 
