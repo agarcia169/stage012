@@ -136,6 +136,7 @@ illegal arguments)
 //prog() - production 1
 void prog() //token should be "program"
 {
+   cout << "you just entered the prog zone\n";
    if (token != "program")
       processError("keyword \"program\" expected");
    progStmt();
@@ -184,6 +185,7 @@ void consts() //token should be "const"
 // vars() - production 4
 void vars() //token should be "var"
 {
+   cout << "you just entered the vars zone\n";
    if (token != "var")
       processError("keyword \"var\" expected")
    string x = nextToken();
