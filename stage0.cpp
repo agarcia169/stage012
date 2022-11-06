@@ -188,7 +188,7 @@ if (token != "var")
 processError(keyword "var" expected)
 if (nextToken() is not a NON_KEY_ID)
 processError(non-keyword identifier must follow "var")
-varStmts()
+varStmts();
 }
 
 // beginEndStmt() - production 5 ¯\_(ツ)_/¯
