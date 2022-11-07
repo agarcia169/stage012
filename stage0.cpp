@@ -9,6 +9,8 @@
 #include <ctype.h>
 #include <iostream>
 #include <vector>
+#include <bits/stdc++.h>
+#include <algorithm>
 // test 
 
 using namespace std;
