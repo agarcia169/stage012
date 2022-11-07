@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <iostream>
 #include <vector>
-#include <bits/stdc++.h>
+#include <cmath>
 #include <algorithm>
 // test 
 
