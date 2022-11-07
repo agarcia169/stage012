@@ -385,7 +385,7 @@ char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
       ch = getchar();
                str[i + 1] = c;
                i++;
-               cout << ch << 001.lst <<'\n'
+               listingFile << ch << '\n'
                return ch;
             } 
 }
