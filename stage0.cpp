@@ -465,28 +465,28 @@ bool isSpecialSymbol(char c) // determines if c is a special symbol
    {// not sure if this is what is meant by special symbol
       switch (c) {
          case ';':
-         return true
+         return true;
          break;
          case ':':
-         return true
+         return true;
          break;
          case ',':
-         return true
+         return true;
          break;
          case '.':
-         return true
+         return true;
          break;
          case '-':
-         return true
+         return true;
          break;      
          case '+':
-         return true
+         return true;
          break;
          case '=':
-         return true
+         return true;
          break;
          default:
-         return false // if it is not a special symbol   
+         return false; // if it is not a special symbol   
          break;   
 
       }
@@ -496,13 +496,13 @@ bool isNonKeyId(string s) // determines if s is a non_key_id
    {
       if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) { //checking if the first character is valid
          
-         return false
+         return false;
       }
       //run through rest of string
       for (int i = 1; i < s.length(); i++) {
          if (!((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9') || s[i] == ' ')) { //checking if the first character is valid
          
-         return false
+         return false;
       }
       }
       return true; //should return true if s is a nonkeyid
@@ -511,7 +511,7 @@ bool isNonKeyId(string s) // determines if s is a non_key_id
 bool isInteger(string s) // determines if s is an integer
    {
       if (isdigit(s[i]) == false) {
-         return false
+         return false;
       } else{return true}  
    }   
       
@@ -521,7 +521,7 @@ bool isBoolean(string s) const // determines if s is a boolean
    {
       if (s == "true" || s == "false") { // idk what to put here i looked up some examples and a lot of them pointed to this way
          //code here... maybe
-         return true
+         return true;
       }
       return false;
    }
@@ -530,25 +530,25 @@ bool isLiteral(string s) // determines if s is a literal
    {
       switch (s) {
          case isInteger(s):
-         return true
+         return true;
          break;
          case 'false':
-         return true
+         return true;
          break;
          case 'true':
-         return true
+         return true;
          break;
          case 'not':
-         return true
+         return true;
          break;
          case '-':
-         return true
+         return true;
          break;      
          case '+':
-         return true
+         return true;
          break;
          default:
-         return false // s is not a literal
+         return false; // s is not a literal
          break;   
 
       }
