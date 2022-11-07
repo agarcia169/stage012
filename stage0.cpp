@@ -436,7 +436,7 @@ void emitStorage()
 
 
 bool isKeyword(string s) // determines if s is a keyword idk if this is what he wants
-   {
+   { // took all keywords and put them in a set to test against the string s
       set<string> keywords = { "alignas",  // set is a  data structure that conatains the same types of data
 "alignof",
 "and",
