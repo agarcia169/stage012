@@ -378,7 +378,7 @@ string nextToken() //returns the next token or end of file marker
 }
 char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
-   get the next character
+   //get the next character
    if (ch =='$') {
          ch = END_OF_FILE    
    } else {
