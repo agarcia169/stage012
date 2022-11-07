@@ -523,9 +523,28 @@ bool isBoolean(string s) const // determines if s is a boolean
 
 bool isLiteral(string s) // determines if s is a literal
    {
-      if (s.begin() == '"' && s.end() == '"') {
-         //code here... maybe
+      switch (s) {
+         case isInteger(s):
          return true
+         break;
+         case 'false':
+         return true
+         break;
+         case 'true':
+         return true
+         break;
+         case 'not':
+         return true
+         break;
+         case '-':
+         return true
+         break;      
+         case '+':
+         return true
+         break;
+         default:
+         return false // s is not a literal
+         break;   
+
       }
-      return false;
    }
