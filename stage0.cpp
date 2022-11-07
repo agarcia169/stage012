@@ -542,28 +542,19 @@ bool isKeyword(string s) // determines if s is a keyword idk if this is what he 
 bool isSpecialSymbol(char c) // determines if c is a special symbol
    {// not sure if this is what is meant by special symbol
       switch (c) {
-         case '!':
+         case ';':
          return true
          break;
-         case '@':
+         case ':':
          return true
          break;
-         case '#':
+         case ',':
          return true
          break;
-         case '$':
+         case '.':
          return true
          break;
-         case '%':
-         return true
-         break;   
-         case '^':
-         return true
-         break;   
-         case '&':
-         return true
-         break;   
-         case '*':
+         case '-':
          return true
          break;      
          case '+':
