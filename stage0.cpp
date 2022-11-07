@@ -394,9 +394,14 @@ char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 void emit(string label, string instruction, string operands, string comment)
    {
       //Turn on left justification in objectFile should probably just use setw() for these
-      objectFile << '{0: <9}'.format(label);
-      objectFile << '{0: <9}'.format(instruction);
-      objectFile << '{0: <25}'.format(operands);
+
+      //objectFile << '{0: <9}'.format(label);
+      //objectFile << '{0: <9}'.format(instruction);
+      //objectFile << '{0: <25}'.format(operands);
+      objectFile << setw(8) << label;
+      objectFile << setw(8) << instruction;
+      objectFile << setw(24) << operands ;
+      objectFile << left;
       objectFile << comment << endl;
       // probs not right idk wtf is goin on
    }
