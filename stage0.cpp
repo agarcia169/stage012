@@ -3,7 +3,6 @@
 
 
 
-//dont forget the fuckton of include we'll need -bola
 #include <ctime>
 #include <iostream>
 #include <ctype.h>
@@ -11,24 +10,11 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-// test 
 
 using namespace std;
 
 END_OF_FILE = '$'
-
-
-//FIXME
-// needs definitions for processError
-// specifically : processError(unexpected end of file);
-//                processError(illegal symbol)
-//                processError('}' cannot begin token);
-// if the pascallite helper functions need to be written, relook at 
-// all the case statements
-// @ createListingHeader() do SOURCESTATEMENT need to be literal or a var?
-// #ofErrors var needed
-
-
+#ofErrors = 
 
 Compiler(char **argv) // constructor
    {
@@ -55,34 +41,29 @@ void createListingHeader()
 void parser()
    {
       nextChar();
-      //FIXME HERE
-      ch must be initialized to the first character of the source file
       if (nextToken() != "program")
-         processError("keyword \"program\" expected")
-            //a call to nextToken() has two effects
-            // (1) the variable, token, is assigned the value of the next token
-            // (2) the next token is read from the source file in order to make
-            // the assignment. The value returned by nextToken() is also
-            // the next token.
+         processError("keyword \"program\" expected");
       prog();
-         //parser implements the grammar rules, calling first rule
+
    }
 void createListingTrailer()
    {
+      //possible right needed to justify right
       cout << "COMPILATION TERMINATED " << #ofErrors <<  " ERRORS ENCOUNTERED\n";
    }
 
 void processError(string err)
    {
-      Output err to listingFile
-      Call exit() to terminate program
+      #ofErrors++;
+      listingFile << "Error: " << err << "\n";
+      exit(1);
    }
 
 void insert(string externalName,storeType inType, modes inMode, string inValue,
 allocation inAlloc, int inUnits)
 
 {
-   cout << "you just entered the prog zone\n";
+   cout << "you just entered the insert zone\n";
    
    string name = externalName;
    while (name != "")
@@ -112,30 +93,34 @@ allocation inAlloc, int inUnits)
 
 storeTypes whichType(string name) //tells which data type a name has
    {
-      if (name is a literal)
-         if (name is a boolean literal)
-            data type = BOOLEAN
+      storeTypes dataType;
+      if (isLiteral(name))
+         if (isBoolean(name))
+            dataType = BOOLEAN;
          else
-            data type = INTEGER
+            dataType = INTEGER;
       else //name is an identifier and hopefully a constant
+         //FIXME
          if (symbolTable[name] is defined)
-            data type = type of symbolTable[name]
+            dataType = type of symbolTable[name];
          else
-            processError(reference to undefined constant)
-      return data type
+            processError("reference to undefined constant");
+      return dataType;
    }
 
 
 string whichValue(string name) //tells which value a name has
    {
-      if (name is a literal)
-         value = name
+      string value;
+      if (isLiteral(name))
+         value = name;
       else //name is an identifier and hopefully a constant
+         //FIXME
          if (symbolTable[name] is defined and has a value)
             value = value of symbolTable[name]
          else
-            processError(reference to undefined constant)
-      return value
+            processError("reference to undefined constant");
+      return value;
    }
 
 
@@ -163,9 +148,11 @@ void prog() //token should be "program"
       consts();
    if (token == "var")
       vars();
+   //seof check
    if (token != "begin")
       processError("keyword \"begin\" expected");
    beginEndStmt();
+   //seof check
    if (token != END_OF_FILE)
       processError("no text may follow \"end\"");
 }
@@ -311,6 +298,7 @@ string ids() //token should be NON_KEY_ID
             if (!isNonKeyId(nextToken()))
                processError("non-keyword identifier expected")
             //check string concat rules here, idk if this works
+            //FIXME
             tempString = temp + "," + ids();
          }
       return tempString;
@@ -380,7 +368,7 @@ char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
    //get the next character
    if (ch =='$') {
-         ch = END_OF_FILE    
+      ch = END_OF_FILE    
    } else {
       ch = getchar();
                str[i + 1] = c;
