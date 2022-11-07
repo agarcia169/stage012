@@ -425,7 +425,26 @@ void emitEpilogue(string operand1, string operand2)
 
 
 void emitStorage()
-   {
+{
+	cout << "enter the emitStorage" << endl;
+	string name;
+	emit("SECTION", ".data");
+	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
+			emit(it->second.getInternalName());
+		}
+	}
+	emit("SECTION", ".bss");
+	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+		if(it->second.getAlloc() == YES && it->second.getMode() == VARIABLE){
+			emit(it->second.getInternalName());
+		}
+	}
+	
+	
+}
+
+   /*{
       emit("SECTION", ".data")
       for those entries in the symbolTable that have
       an allocation of YES and a storage mode of CONSTANT
@@ -435,7 +454,7 @@ void emitStorage()
       an allocation of YES and a storage mode of VARIABLE
       { call emit to output a line to objectFile }
    }
-
+*/
 
 bool isKeyword(string s) // determines if s is a keyword idk if this is what he wants
    { // took all keywords and put them in a set to test against the string s
