@@ -595,9 +595,9 @@ bool isInteger(string s) // determines if s is an integer
       
    
 
-bool isBoolean(string s) // determines if s is a boolean
+bool isBoolean(string s) const // determines if s is a boolean
    {
-      if (s == s) { // idk what to put here i looked up some examples and a lot of them pointed to this way
+      if (s == "true" || s == "false") { // idk what to put here i looked up some examples and a lot of them pointed to this way
          //code here... maybe
          return true
       }
