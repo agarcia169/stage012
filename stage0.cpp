@@ -425,24 +425,6 @@ void emitEpilogue(string operand1, string operand2)
 
 
 void emitStorage()
-{
-	cout << "enter the emitStorage" << endl;
-	string name;
-	emit("SECTION", ".data");
-	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
-		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
-			emit(it->second.getInternalName());
-		}
-	}
-	emit("SECTION", ".bss");
-	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
-		if(it->second.getAlloc() == YES && it->second.getMode() == VARIABLE){
-			emit(it->second.getInternalName());
-		}
-	}
-	
-	
-}
 
    /*{
       emit("SECTION", ".data")
