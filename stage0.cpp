@@ -393,11 +393,11 @@ char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 
 void emit(string label, string instruction, string operands, string comment)
    {
-      //Turn on left justification in objectFile
-      cout << '{0: <9}'.format(label);
-      cout << '{0: <9}'.format(instruction);
-      cout << '{0: <25}'.format(operands);
-      cout << comment ;
+      //Turn on left justification in objectFile should probably just use setw() for these
+      objectFile << '{0: <9}'.format(label);
+      objectFile << '{0: <9}'.format(instruction);
+      objectFile << '{0: <25}'.format(operands);
+      objectFile << comment <<endl;
       // probs not right idk wtf is goin on
    }
 
