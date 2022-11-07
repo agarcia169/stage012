@@ -404,13 +404,13 @@ void emit(string label, string instruction, string operands, string comment)
 void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
    {
       //Output identifying comments at beginning of objectFile
-      objectFile << "Alex Garcia && Adebolanle Balogun" <<endl;
+      objectFile << "Alex Garcia && Adebolanle Balogun" << ctime(&now) <<endl;
       // ^ idk where to start here v
       //Output the %INCLUDE directives
-      objectFile << "#include <iostream>:" << endl;
-      objectFile << "#include <fstream>" << endl;
-      objectFile << "#include <string>"<< endl;
-      objectFile << "#include <map>"<< endl;
+      objectFile << "%INCLUDE Along32.inc:" << endl;
+      objectFile << "%INCLUDE Macros_Along.inc" << endl;
+      
+      
       emit("SECTION", ".text")
       emit("global", "_start", "", "; program" + progName)
       emit("\n_start:")
