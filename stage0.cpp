@@ -327,16 +327,16 @@ string nextToken() //returns the next token or end of file marker
 		switch(ch)
 			{
 				case '{' : //process comment
-					while (nextChar() != END_OF_FILE || '}'}
+					while (nextChar() != END_OF_FILE || nextChar() != '}'}
 					{
 						if (ch == END_OF_FILE)
-                         processError(unexpected end of file);
+                         processError("unexpected end of file");
 						else
-                         nextChar()
+                         nextChar();
                }
                    break;
 				case '}' : 
-               processError('}' cannot begin token);
+               processError("\'}\' cannot begin token");
                break;            
             
 				case isspace(ch) : 
@@ -350,28 +350,28 @@ string nextToken() //returns the next token or end of file marker
                token = ch;
                // I might be fucking up here idk if this is the proper way to do it
                String s = nextChar();
-               while (isNonKeyId(s) && != END_OF_FILE)
+               while (//fixme)
                   {
-                     token+=ch
+                     token+=ch;
 						}	
                if (ch == END_OF_FILE)
-                  processError(unexpected end of file)
+                  processError("unexpected end of file");
                break;
             case isdigit(ch) :
                token = ch;
                String s = nextChar();
-               while (isInteger(s) && != END_OF_FILE)
+               while (isInteger(s) && s != END_OF_FILE)
                   {
-                     token+=ch
+                     token+=ch;
                   }
                if (ch == END_OF_FILE)
-               processError(unexpected end of file)
+                  processError("unexpected end of file");
                break;
             case END_OF_FILE : 
                token = ch;
                break;
             default : 
-               processError(illegal symbol);
+               processError("illegal symbol");
             break; // this is a superstitous break, i know i probably dont need it 
     }
     return token
