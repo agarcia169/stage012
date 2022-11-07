@@ -404,16 +404,16 @@ void emit(string label, string instruction, string operands, string comment)
 void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
    {
       //Output identifying comments at beginning of objectFile
-      cout << "Alex Garcia && Adebolanle Balogun"
+      objectFile << "Alex Garcia && Adebolanle Balogun" <<endl;
       // ^ idk where to start here v
       //Output the %INCLUDE directives
-      cout << "#include <iostream>:" ;
-      cout << "#include <fstream>";
-      cout << "#include <string>";
-      cout << "#include <map>";
+      objectFile << "#include <iostream>:" << endl;
+      objectFile << "#include <fstream>" << endl;
+      objectFile << "#include <string>"<< endl;
+      objectFile << "#include <map>"<< endl;
       emit("SECTION", ".text")
       emit("global", "_start", "", "; program" + progName)
-      emit("_start:")
+      emit("\n_start:")
    }
 
 
@@ -425,18 +425,19 @@ void emitEpilogue(string operand1, string operand2)
 
 
 void emitStorage()
-
-   /*{
-      emit("SECTION", ".data")
-      for those entries in the symbolTable that have
-      an allocation of YES and a storage mode of CONSTANT
-      { call emit to output a line to objectFile }
-      emit("SECTION", ".bss")
-      for those entries in the symbolTable that have
-      an allocation of YES and a storage mode of VARIABLE
-      { call emit to output a line to objectFile }
-   }
-*/
+// not sure if right but this is how the other longboard guy explained it to me
+   emit("SECTION", ".data");
+	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
+			emit(it->second.getInternalName());
+		}
+	}
+	emit("SECTION", ".bss");
+	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+		if(it->second.getAlloc() == YES && it->second.getMode() == VARIABLE){
+			emit(it->second.getInternalName());
+		}
+	}
 
 bool isKeyword(string s) // determines if s is a keyword idk if this is what he wants
    { // took all keywords and put them in a set to test against the string s
