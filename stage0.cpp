@@ -535,7 +535,7 @@ bool isKeyword(string s) // determines if s is a keyword idk if this is what he 
 "while",
 "xor",
 "xor_eq" };
-      if (keywords.count(s)) {return true};// should count the occurences of s in the keywords set
+      if (keywords.count(s)) {return true};// should count the occurences of s in the keywords set hopefully returns true if s is one of those keywords
       return false 
    }
 
