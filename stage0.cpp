@@ -397,7 +397,7 @@ void emit(string label, string instruction, string operands, string comment)
       objectFile << '{0: <9}'.format(label);
       objectFile << '{0: <9}'.format(instruction);
       objectFile << '{0: <25}'.format(operands);
-      objectFile << comment <<endl;
+      objectFile << comment << endl;
       // probs not right idk wtf is goin on
    }
 
