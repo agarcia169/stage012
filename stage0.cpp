@@ -304,6 +304,7 @@ string Compiler::ids() //token should be NON_KEY_ID
 
 string Compiler::nextToken() //returns the next token or end of file marker
 {
+   cout << "Executing line: " << __LINE__ << '\n';
 	token = "";
 	while (token == "")
 	{
@@ -364,6 +365,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
 }
 char Compiler::nextChar()
 {
+   cout << "Executing line: " << __LINE__ << '\n';
    sourceFile.get(ch);
    if (sourceFile.eof()) {
       ch = '$';  
