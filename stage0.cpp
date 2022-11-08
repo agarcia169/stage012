@@ -113,9 +113,9 @@ string Compiler::whichValue(string name) //tells which value a name has
          value = name;
       else //name is an identifier and hopefully a constant
          if (symbolTable.count(name) != 0 && symbolTable.find(name)->second.getValue() != "")
-            value = symbolTable.find(name)->second.getValue();
+            {value = symbolTable.find(name)->second.getValue();}
          else
-            processError("reference to undefined constant");
+            {processError("reference to undefined constant");}
       return value;
    }
 
