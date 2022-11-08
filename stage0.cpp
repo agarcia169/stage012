@@ -7,11 +7,11 @@
 #include <iostream> 
 #include <ctype.h>
 #include <iostream>
-#include <iomanip>
 #include <vector>
 #include <cmath>
 #include <algorithm>
 #include <stage0.h>
+#include <iomanip>
 
 using namespace std;
 
@@ -149,8 +149,7 @@ void Compiler::prog() //token should be "program"
    if (token != "begin")
       processError("keyword \"begin\" expected");
    beginEndStmt();
-   //seof check
-   if ((token) != (END_OF_FILE))
+   if (token[0] != END_OF_FILE)
       processError("no text may follow \"end\"");
 }
 
@@ -273,7 +272,7 @@ void Compiler::varStmts() //token should be NON_KEY_ID
       y = token;
       if (nextToken() != ";")
          processError("semicolon expected");
-      insert(x,y,VARIABLE,"",YES,1);
+      insert(x,whichType(y),VARIABLE,"",YES,1);
       //Double Check here to the pseudocode
       if (nextToken() != "begin" || !isNonKeyId(nextToken()))
          processError("non-keyword identifier or \"begin\" expected");
@@ -310,9 +309,9 @@ string Compiler::nextToken() //returns the next token or end of file marker
 		switch(ch)
 			{
 				case '{' : //process comment
-					while (nextChar() != END_OF_FILE || nextChar() != '}')}
+					while (nextChar() != sourceFile.eof() || nextChar() != '}')}
 					{
-						if (ch == END_OF_FILE)
+						if (ch == sourceFile.eof())
                          processError("unexpected end of file");
 						else
                          nextChar();
@@ -332,24 +331,24 @@ string Compiler::nextToken() //returns the next token or end of file marker
 				case islower(ch) : 
                token = ch;
                String s = nextChar();
-               while (isNonKeyId(s) && s != END_OF_FILE)
+               while (isNonKeyId(s) && s != sourceFile.eof())
                   {
                      token+=ch;
 						}	
-               if (ch == END_OF_FILE)
+               if (ch == sourceFile.eof())
                   processError("unexpected end of file");
                break;
             case isdigit(ch) :
                token = ch;
                String s = nextChar();
-               while (isInteger(s) && s != END_OF_FILE)
+               while (isInteger(s) && s != sourceFile.eof())
                   {
                      token+=ch;
                   }
-               if (ch == END_OF_FILE)
+               if (ch == sourceFile.eof())
                   processError("unexpected end of file");
                break;
-            case END_OF_FILE : 
+            case sourceFile.eof() : 
                token = ch;
                break;
             default : 
@@ -406,8 +405,8 @@ void Compiler::emitEpilogue(string operand1, string operand2)
 
 
 void Compiler::emitStorage()
-// not sure if right but this is how the other longboard guy explained it to me
-  emit("SECTION", ".data");
+
+   emit("SECTION", ".data");
 	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
 		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
 			emit(it->second.getInternalName());
@@ -492,7 +491,7 @@ bool Compiler::isBoolean(string s) const // determines if s is a boolean
       return false;
    }
 
-bool Compiler::isLiteral(string s) // determines if s is a literal
+bool Compiler::isLiteral(string s) const // determines if s is a literal
    {
       switch (s) {
          case isInteger(s):
@@ -519,25 +518,26 @@ bool Compiler::isLiteral(string s) // determines if s is a literal
 
       }
    }
-bool Compiler::genInternalName(storeTypes s) // determines if s is a literal
+//  string genInternalName(storeTypes stype) const;
+  string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
    {
       cout << "enter genName" << endl;
 	   string newName;
       //FIXME MAYBE
 	   static int numBool, numInt, numProg;
-	   if (s == BOOLEAN){
+	   if (stype == BOOLEAN){
          newName = "B";
          newName += to_string(numBool);
          numBool++;
       }
 	
-      if (s == INTEGER){
+      if (stype == INTEGER){
          newName = "I";
          newName += to_string(numInt);
          numInt++;
       }
       
-      if (s == PROG_NAME){
+      if (stype == PROG_NAME){
          newName = "P";
          newName += to_string(numProg);
          numProg++;
