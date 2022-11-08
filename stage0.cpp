@@ -16,21 +16,21 @@ using namespace std;
 END_OF_FILE = '$'
 #ofErrors = 
 
-Compiler(char **argv) // constructor
+Compiler::Compiler(char **argv) // constructor
    {
       sourceFile.open(argv[1]);
       listingFile.open(argv[2]);
       objectFile.open(argv[3]);
    }
    
-~Compiler() // destructor
+~Compiler::Compiler() // destructor
    {
       sourceFile.close();
       listingFile.close();
       objectFile.close();
    }
 
-void createListingHeader()
+void Compiler::createListingHeader()
    {
       time_t now = time (NULL);
       cout << "STAGE0:  Alex Garcia & Adebolanle Balogun" << ctime(&now) << "\n";
@@ -38,7 +38,7 @@ void createListingHeader()
       //line numbers and source statements should be aligned under the headings
    }
 
-void parser()
+void Compiler::parser()
    {
       nextChar();
       if (nextToken() != "program")
@@ -46,20 +46,20 @@ void parser()
       prog();
 
    }
-void createListingTrailer()
+void Compiler::createListingTrailer()
    {
       //possible right needed to justify right
       cout << "COMPILATION TERMINATED " << #ofErrors <<  " ERRORS ENCOUNTERED\n";
    }
 
-void processError(string err)
+void Compiler::processError(string err)
    {
       #ofErrors++;
       listingFile << "Error: " << err << "\n";
       exit(1);
    }
 
-void insert(string externalName,storeType inType, modes inMode, string inValue,
+void Compiler::insert(string externalName,storeType inType, modes inMode, string inValue,
 allocation inAlloc, int inUnits)
 
 {
@@ -91,7 +91,7 @@ allocation inAlloc, int inUnits)
 }
 
 
-storeTypes whichType(string name) //tells which data type a name has
+storeTypes Compiler::whichType(string name) //tells which data type a name has
    {
       storeTypes dataType;
       if (isLiteral(name))
@@ -109,7 +109,7 @@ storeTypes whichType(string name) //tells which data type a name has
    }
 
 
-string whichValue(string name) //tells which value a name has
+string Compiler::whichValue(string name) //tells which value a name has
    {
       string value;
       if (isLiteral(name))
@@ -125,7 +125,7 @@ string whichValue(string name) //tells which value a name has
 
 
 
-void code(string op, string operand1, string operand2)
+void Compiler::code(string op, string operand1, string operand2)
    {
       if (op == "program")
          emitPrologue(operand1);
@@ -138,7 +138,7 @@ void code(string op, string operand1, string operand2)
 
 
 //prog() - production 1
-void prog() //token should be "program"
+void Compiler::prog() //token should be "program"
 {
    cout << "you just entered the prog zone\n";
    if (token != "program")
@@ -158,7 +158,7 @@ void prog() //token should be "program"
 }
 
 // progStmt() - production 2
-void progStmt() //token should be "program"
+void Compiler::progStmt() //token should be "program"
    {
       cout << "you just entered the progstmts zone\n";
       string x;
@@ -177,7 +177,7 @@ void progStmt() //token should be "program"
    }
 
 //consts() - production 3
-void consts() //token should be "const"
+void Compiler::consts() //token should be "const"
 {
    cout << "you just entered the consts zone\n";
    if (token != "const")
@@ -189,7 +189,7 @@ void consts() //token should be "const"
 }
 
 // vars() - production 4
-void vars() //token should be "var"
+void Compiler::vars() //token should be "var"
 {
    cout << "you just entered the vars zone\n";
    if (token != "var")
@@ -201,7 +201,7 @@ void vars() //token should be "var"
 }
 
 // beginEndStmt() - production 5 ¯\_(ツ)_/¯
-void beginEndStmt() //token should be "begin"
+void Compiler::beginEndStmt() //token should be "begin"
 /*
 string token()
 for (string::iterator it = token.begin(); it != token.end; ++it)
@@ -221,7 +221,7 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
 }
 
 //constStmts() - production 6
-void constStmts() //token should be NON_KEY_ID
+void Compiler::constStmts() //token should be NON_KEY_ID
    {
       cout << "you just entered the constStmts zone\n";
       string x,y;
@@ -261,7 +261,7 @@ void constStmts() //token should be NON_KEY_ID
    }
 
 //varStmts() - production 7 
-void varStmts() //token should be NON_KEY_ID
+void Compiler::varStmts() //token should be NON_KEY_ID
    {
       cout << "you just entered the varStmts zone\n";
       string x,y;
@@ -285,7 +285,7 @@ void varStmts() //token should be NON_KEY_ID
    }
 
 //ids() - production 8
-string ids() //token should be NON_KEY_ID
+string Compiler::ids() //token should be NON_KEY_ID
    {
       cout << "you just entered the ids zone\n";
       string temp,tempString;
@@ -307,7 +307,7 @@ string ids() //token should be NON_KEY_ID
 
 
 
-string nextToken() //returns the next token or end of file marker
+string Compiler::nextToken() //returns the next token or end of file marker
 {
 	token = "";
 	while (token == "")
@@ -364,7 +364,7 @@ string nextToken() //returns the next token or end of file marker
     }
     return token
 }
-char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
+char Compiler::nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
    //get the next character
    if (ch =='$') {
@@ -379,7 +379,7 @@ char nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 }
 
 
-void emit(string label, string instruction, string operands, string comment)
+void Compiler::emit(string label, string instruction, string operands, string comment)
    {
       //Turn on left justification in objectFile should probably just use setw() for these
 
@@ -394,7 +394,7 @@ void emit(string label, string instruction, string operands, string comment)
       // probs not right idk wtf is goin on
    }
 
-void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
+void Compiler::emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
    {
       //Output identifying comments at beginning of objectFile
       objectFile << "Alex Garcia && Adebolanle Balogun" << ctime(&now) <<endl;
@@ -410,14 +410,14 @@ void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(
    }
 
 
-void emitEpilogue(string operand1, string operand2)
+void Compiler::emitEpilogue(string operand1, string operand2)
    {
       emit("","Exit", "{0}");
       emitStorage();
    }
 
 
-void emitStorage()
+void Compiler::emitStorage()
 // not sure if right but this is how the other longboard guy explained it to me
    emit("SECTION", ".data");
 	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
@@ -432,7 +432,7 @@ void emitStorage()
 		}
 	}
 
-bool isKeyword(string s) // determines if s is a keyword idk if this is what he wants
+bool Compiler::isKeyword(string s) // determines if s is a keyword idk if this is what he wants
    { // took all keywords and put them in a set to test against the string s
       set<string> keywords = { "program",  // set is a  data structure that conatains the same types of data
 "begin",
@@ -449,7 +449,7 @@ bool isKeyword(string s) // determines if s is a keyword idk if this is what he 
       return false 
    }
 
-bool isSpecialSymbol(char c) // determines if c is a special symbol
+bool Compiler::isSpecialSymbol(char c) // determines if c is a special symbol
    {// not sure if this is what is meant by special symbol
       switch (c) {
          case ';':
@@ -480,7 +480,7 @@ bool isSpecialSymbol(char c) // determines if c is a special symbol
       }
    }
 
-bool isNonKeyId(string s) // determines if s is a non_key_id
+bool Compiler::isNonKeyId(string s) // determines if s is a non_key_id
    {
       if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) { //checking if the first character is valid
          
@@ -496,7 +496,7 @@ bool isNonKeyId(string s) // determines if s is a non_key_id
       return true; //should return true if s is a nonkeyid
    }
 
-bool isInteger(string s) // determines if s is an integer
+bool Compiler::isInteger(string s) // determines if s is an integer
    {
       if (isdigit(s[i]) == false) {
          return false;
@@ -505,7 +505,7 @@ bool isInteger(string s) // determines if s is an integer
       
    
 
-bool isBoolean(string s) const // determines if s is a boolean
+bool Compiler::isBoolean(string s) const // determines if s is a boolean
    {
       if (s == "true" || s == "false") { // idk what to put here i looked up some examples and a lot of them pointed to this way
          //code here... maybe
@@ -514,7 +514,7 @@ bool isBoolean(string s) const // determines if s is a boolean
       return false;
    }
 
-bool isLiteral(string s) // determines if s is a literal
+bool Compiler::isLiteral(string s) // determines if s is a literal
    {
       switch (s) {
          case isInteger(s):
