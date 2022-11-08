@@ -309,7 +309,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
 		switch(ch)
 			{
 				case '{' : //process comment
-					while (nextChar() != sourceFile.eof() || nextChar() != '}')}
+					while (nextChar() != sourceFile.eof() || nextChar() != '}')
 					{
 						if (ch == sourceFile.eof())
                          processError("unexpected end of file");
@@ -355,7 +355,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
                processError("illegal symbol");
             break; // this is a superstitous break, i know i probably dont need it 
     }
-    return token
+    return token;
 }
 char Compiler::nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
@@ -493,7 +493,20 @@ bool Compiler::isBoolean(string s) const // determines if s is a boolean
 
 bool Compiler::isLiteral(string s) const // determines if s is a literal
    {
-      switch (s) {
+      if (isInteger(s))
+         return true;
+      else if (s == "false")
+         return true;
+      else if (s == "true")
+         return true;
+      else if (s == "not")
+         return true;
+      else if (s == "-")
+         return true;
+      else if (s == "+")
+         return true;
+      return false;
+      /*switch (cock) {
          case isInteger(s):
          return true;
          break;
@@ -509,22 +522,19 @@ bool Compiler::isLiteral(string s) const // determines if s is a literal
          case "-":
          return true;
          break;      
-         case '+':
+         case "+":
          return true;
          break;
          default:
          return false;
-         break;   
-
-      }
+         break; */  
+      
    }
-//  string genInternalName(storeTypes stype) const;
+//string Compiler::genInternalName(storeTypes stype) const{
   string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
    {
-      cout << "enter genName" << endl;
 	   string newName;
-      //FIXME MAYBE
-	   static int numBool, numInt, numProg;
+	   static int numBool, numInt, numProg = 0;
 	   if (stype == BOOLEAN){
          newName = "B";
          newName += to_string(numBool);
