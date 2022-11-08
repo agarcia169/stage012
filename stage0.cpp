@@ -74,7 +74,7 @@ allocation inAlloc, int inUnits)
          processError("illegal use of keyword");
       else //create table entry
          {
-            if (isUpper(name[0]))
+            if (isupper(name[0]))
                symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
             else
             //does this:                                 
