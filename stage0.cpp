@@ -149,7 +149,7 @@ void Compiler::prog() //token should be "program"
       processError("keyword \"begin\" expected");
    beginEndStmt();
    //seof check
-   if (token != END_OF_FILE)
+   if (token ! END_OF_FILE)
       processError("no text may follow \"end\"");
 }
 
