@@ -425,7 +425,7 @@ void Compiler::emitStorage()
 		}
 	}
 
-bool isKeyword(string s)
+bool Compiler::isKeyword(string s)
    { 
       set<string> keywords = { "program", "begin", "end", "var", "const", "integer", "boolean", "true", "false", "not"};
       if (keywords.count(s)) {return true};
@@ -524,7 +524,7 @@ bool Compiler::isLiteral(string s) // determines if s is a literal
 
       }
    }
-bool genInternalName(storeTypes s) // determines if s is a literal
+bool Compiler::genInternalName(storeTypes s) // determines if s is a literal
    {
       cout << "enter genName" << endl;
 	   string newName;
