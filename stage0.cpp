@@ -333,7 +333,8 @@ string Compiler::nextToken() //returns the next token or end of file marker
       else if (islower(ch)) 
          {
             token = ch;
-            while (isNonKeyId(ch) && ch != sourceFile.eof())
+            string n = ch;
+            while (isNonKeyId(n) && ch != sourceFile.eof())
                {
                   token+=ch;
 					}	
@@ -407,7 +408,7 @@ void Compiler::emitEpilogue(string operand1, string operand2)
 
 
 void Compiler::emitStorage()
-
+{
    emit("SECTION", ".data");
 	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
 		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
@@ -420,7 +421,7 @@ void Compiler::emitStorage()
 			emit(it->second.getInternalName());
 		}
 	}
-
+}
 bool Compiler::isKeyword(string s) const
    { 
       set<string> keywords = { "program", "begin", "end", "var", "const", "integer", "boolean", "true", "false", "not"};
@@ -432,17 +433,17 @@ bool Compiler::isSpecialSymbol(char c) const // determines if c is a special sym
    {// not sure if this is what is meant by special symbol
    if (c == ';')
          return true;
-      else if (c == ":")
+      else if (c == ':')
          return true;
-      else if (c == ",")
+      else if (c == ',')
          return true;
-      else if (c == ".")
+      else if (c == '.')
          return true;
-      else if (c == "-")
+      else if (c == '-')
          return true;
-      else if (c == "+")
+      else if (c == '+')
          return true;
-      else if (c == "=")
+      else if (c == '=')
          return true;
       else{return false;}   
       /*switch (c) {
