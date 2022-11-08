@@ -4,16 +4,16 @@
 
 
 #include <ctime>
-#include <iostream>
+#include <iostream> 
 #include <ctype.h>
 #include <iostream>
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <stage0.h>
 
 using namespace std;
 
-END_OF_FILE = '$'
 
 Compiler::Compiler(char **argv) // constructor
    {
@@ -22,7 +22,7 @@ Compiler::Compiler(char **argv) // constructor
       objectFile.open(argv[3]);
    }
    
-~Compiler::Compiler() // destructor
+Compiler::~Compiler() // destructor
    {
       sourceFile.close();
       listingFile.close();
@@ -48,7 +48,7 @@ void Compiler::parser()
 void Compiler::createListingTrailer()
    {
       //possible right needed to justify right
-      cout << "COMPILATION TERMINATED " << #ofErrors <<  " ERRORS ENCOUNTERED\n";
+      cout << "COMPILATION TERMINATED " << errorCount <<  " ERRORS ENCOUNTERED\n";
    }
 
 void Compiler::processError(string err)
@@ -69,17 +69,17 @@ allocation inAlloc, int inUnits)
    while (name != "")
    {
       if (symbolTable.count(name) != 0)
-         processError("multiple name definition")
+         processError("multiple name definition");
       else if (isKeyword(name))
-         processError("illegal use of keyword")
+         processError("illegal use of keyword");
       else //create table entry
          {
             if (isUpper(name[0]))
-               symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)))
+               symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
             else
             //does this:                                 
                symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(genInternalName(inType),inType,inMode,inValue,
-                                 inAlloc,inUnits)))
+                                 inAlloc,inUnits)));
             // need to be this?:
             // symbolTable[name] = SymbolTableEntry.SymbolTableEntry(genInternalName(inType),inType,inMode,inValue,inAlloc,inUnits)
          }
@@ -472,7 +472,7 @@ bool Compiler::isNonKeyId(string s) // determines if s is a non_key_id
       return true; 
    }
 
-bool Compiler::isInteger(string s) // determines if s is an integer
+bool Compiler::isInteger(string s) const// determines if s is an integer
    {
       if (isdigit(s[i]) == false) {
          return false;
@@ -496,16 +496,16 @@ bool Compiler::isLiteral(string s) // determines if s is a literal
          case isInteger(s):
          return true;
          break;
-         case 'false':
+         case "false":
          return true;
          break;
-         case 'true':
+         case "true":
          return true;
          break;
-         case 'not':
+         case "not":
          return true;
          break;
-         case '-':
+         case "-":
          return true;
          break;      
          case '+':
