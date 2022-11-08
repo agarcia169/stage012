@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <stage0.h>
 #include <iomanip>
+#include <set>
 
 using namespace std;
 
@@ -420,14 +421,14 @@ void Compiler::emitStorage()
 		}
 	}
 
-bool Compiler::isKeyword(string s)
+bool Compiler::isKeyword(string s) const
    { 
       set<string> keywords = { "program", "begin", "end", "var", "const", "integer", "boolean", "true", "false", "not"};
-      if (keywords.count(s)) {return true};
-      return false 
+      if (keywords.count(s)) {return true;};
+      return false; 
    }
 
-bool Compiler::isSpecialSymbol(char c) // determines if c is a special symbol
+bool Compiler::isSpecialSymbol(char c) const // determines if c is a special symbol
    {// not sure if this is what is meant by special symbol
    if (c == ';')
          return true;
@@ -471,9 +472,9 @@ bool Compiler::isSpecialSymbol(char c) // determines if c is a special symbol
          break;   
 */
       }
-   }
+   //}
 
-bool Compiler::isNonKeyId(string s) // determines if s is a non_key_id
+bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
    {
       if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) {
          
