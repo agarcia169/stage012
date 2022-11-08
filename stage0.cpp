@@ -160,7 +160,7 @@ void Compiler::progStmt() //token should be "program"
       string x;
       if (token != "program")
          processError("keyword \"program\" expected");
-      x = NextToken();
+      x = nextToken();
       if (!isNonKeyId(x))
       //FIXME dont know if PROG_NAME is the correct way to do this
          processError(PROG_NAME + " expected");
@@ -207,7 +207,7 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
 {
    cout << "you just entered the beginEndStmt zone\n";
    if (token != "begin")
-      procesError("keyword \"begin\" expected");
+      processError("keyword \"begin\" expected");
    if (nextToken() != "end")
       processError("keyword \"end\" expected");
    if (nextToken() != ".")
