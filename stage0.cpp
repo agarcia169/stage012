@@ -14,7 +14,8 @@
 using namespace std;
 
 END_OF_FILE = '$'
-#ofErrors = 
+#ofErrors = 0;
+lineNumber = 0;
 
 Compiler::Compiler(char **argv) // constructor
    {
@@ -365,15 +366,20 @@ string Compiler::nextToken() //returns the next token or end of file marker
 }
 char Compiler::nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
-   if (ch =='$') {
-      ch = END_OF_FILE    
-   } else {
-      ch = getchar();
-               str[i + 1] = c;
-               i++;
-               listingFile << ch << '\n'
-               return ch;
-            } 
+   sourceFile.get(ch);
+   if (sourceFile.eof()) {
+      ch = '$';  
+      return ch;
+   } else if (lineNumber == 0){
+      lineNumber +=1;
+      listingFile << right << setw(5) << lineNumber << '|';
+   } 
+   listingFile << ch;
+   else if (ch == '\n') {
+      lineNumber +=1;
+      listingFile << right << setw(5) << lineNumber << '|';
+   }
+   return ch;
 }
 
 
@@ -386,7 +392,7 @@ void Compiler::emit(string label, string instruction, string operands, string co
       objectFile << comment << endl;
    }
 
-void Compiler::emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
+void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
    {
       //Output identifying comments at beginning of objectFile
       objectFile << "Alex Garcia && Adebolanle Balogun" << ctime(&now) <<endl;
