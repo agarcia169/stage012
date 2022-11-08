@@ -428,7 +428,22 @@ bool Compiler::isKeyword(string s)
 
 bool Compiler::isSpecialSymbol(char c) // determines if c is a special symbol
    {// not sure if this is what is meant by special symbol
-      switch (c) {
+   if (c == ';')
+         return true;
+      else if (c == ":")
+         return true;
+      else if (c == ",")
+         return true;
+      else if (c == ".")
+         return true;
+      else if (c == "-")
+         return true;
+      else if (c == "+")
+         return true;
+      else if (c == "=")
+         return true;
+      else{return false;}   
+      /*switch (c) {
          case ';':
          return true;
          break;
@@ -453,7 +468,7 @@ bool Compiler::isSpecialSymbol(char c) // determines if c is a special symbol
          default:
          return false; // if it is not a special symbol   
          break;   
-
+*/
       }
    }
 
