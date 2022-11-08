@@ -112,6 +112,7 @@ storeTypes Compiler::whichType(string name) //tells which data type a name has
 
 string Compiler::whichValue(string name) //tells which value a name has
    {
+      cout << "You just entered the value zone" << endl;
       string value;
       if (isLiteral(name))
          value = name;
