@@ -14,8 +14,6 @@
 using namespace std;
 
 END_OF_FILE = '$'
-#ofErrors = 0;
-lineNumber = 0;
 
 Compiler::Compiler(char **argv) // constructor
    {
@@ -55,12 +53,13 @@ void Compiler::createListingTrailer()
 
 void Compiler::processError(string err)
    {
-      #ofErrors++;
-      listingFile << "Error: " << "Line "<< lineNumber << ": " << err << "\n";
+      errorCount++;
+      listingFile << "Error: " << "Line "<< lineNo << ": " << err << "\n";
+      createListingTrailer();
       exit(1);
    }
 
-void Compiler::insert(string externalName,storeType inType, modes inMode, string inValue,
+void Compiler::insert(string externalName,storeTypes inType, modes inMode, string inValue,
 allocation inAlloc, int inUnits)
 
 {
@@ -69,22 +68,18 @@ allocation inAlloc, int inUnits)
    string name = externalName;
    while (name != "")
    {
-      //symbolTable[name] is defined
-      //so would this work?
-      //also would the class name notation be correct
-      //FIXME how do we compare external and internal names?
-      if (SymbolTableEntry.getInternalName(name))
+      if (symbolTable.count(name) != 0)
          processError("multiple name definition")
       else if (isKeyword(name))
          processError("illegal use of keyword")
       else //create table entry
          {
             if (isUpper(name[0]))
-               symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
+               symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)))
             else
             //does this:                                 
-               symbolTable[name]=(genInternalName(inType),inType,inMode,inValue,
-                                 inAlloc,inUnits)
+               symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(genInternalName(inType),inType,inMode,inValue,
+                                 inAlloc,inUnits)))
             // need to be this?:
             // symbolTable[name] = SymbolTableEntry.SymbolTableEntry(genInternalName(inType),inType,inMode,inValue,inAlloc,inUnits)
          }
@@ -100,12 +95,12 @@ storeTypes Compiler::whichType(string name) //tells which data type a name has
             dataType = BOOLEAN;
          else
             dataType = INTEGER;
-      else //name is an identifier and hopefully a constant
-         //FIXME
-         if (symbolTable[name] is defined)
-            dataType = type of symbolTable[name];
+      else {
+         if (symbolTable.count(name) != 0)
+            dataType = symbolTable.find(name)->second.getDataType();
          else
             processError("reference to undefined constant");
+      }
       return dataType;
    }
 
@@ -117,9 +112,8 @@ string Compiler::whichValue(string name) //tells which value a name has
       if (isLiteral(name))
          value = name;
       else //name is an identifier and hopefully a constant
-         //FIXME
-         if (symbolTable[name] is defined and has a value)
-            value = value of symbolTable[name]
+         if (symbolTable.count(name) != 0 && symbolTable.find(name)->second.getValue() != "")
+            value = symbolTable.find(name)->second.getValue();
          else
             processError("reference to undefined constant");
       return value;
@@ -299,8 +293,6 @@ string Compiler::ids() //token should be NON_KEY_ID
          {
             if (!isNonKeyId(nextToken()))
                processError("non-keyword identifier expected")
-            //check string concat rules here, idk if this works
-            //FIXME
             tempString = temp + "," + ids();
          }
       return tempString;
@@ -371,14 +363,14 @@ char Compiler::nextChar() //returns the next character or end of file marker ¯\
    if (sourceFile.eof()) {
       ch = '$';  
       return ch;
-   } else if (lineNumber == 0){
-      lineNumber +=1;
-      listingFile << right << setw(5) << lineNumber << '|';
+   } else if (lineNo == 0){
+      lineNo +=1;
+      listingFile << right << setw(5) << lineNo << '|';
    } 
    listingFile << ch;
    else if (ch == '\n') {
-      lineNumber +=1;
-      listingFile << right << setw(5) << lineNumber << '|';
+      lineNo +=1;
+      listingFile << right << setw(5) << lineNo << '|';
    }
    return ch;
 }
