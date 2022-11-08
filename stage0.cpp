@@ -149,7 +149,7 @@ void Compiler::prog() //token should be "program"
       processError("keyword \"begin\" expected");
    beginEndStmt();
    //seof check
-   if (token ! END_OF_FILE)
+   if ((token) != (END_OF_FILE))
       processError("no text may follow \"end\"");
 }
 
@@ -292,7 +292,7 @@ string Compiler::ids() //token should be NON_KEY_ID
       if (nextToken() == ",")
          {
             if (!isNonKeyId(nextToken()))
-               processError("non-keyword identifier expected")
+               processError("non-keyword identifier expected");
             tempString = temp + "," + ids();
          }
       return tempString;
@@ -309,7 +309,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
 		switch(ch)
 			{
 				case '{' : //process comment
-					while (nextChar() != END_OF_FILE || nextChar() != '}'}
+					while (nextChar() != END_OF_FILE || nextChar() != '}')}
 					{
 						if (ch == END_OF_FILE)
                          processError("unexpected end of file");
@@ -387,6 +387,7 @@ void Compiler::emit(string label, string instruction, string operands, string co
 
 void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
    {
+      time_t now = time (NULL);
       objectFile << "Alex Garcia && Adebolanle Balogun" << ctime(&now) <<endl;
       objectFile << "%INCLUDE Along32.inc:" << endl;
       objectFile << "%INCLUDE Macros_Along.inc" << endl;
@@ -405,7 +406,7 @@ void Compiler::emitEpilogue(string operand1, string operand2)
 
 void Compiler::emitStorage()
 // not sure if right but this is how the other longboard guy explained it to me
-   emit("SECTION", ".data");
+  emit("SECTION", ".data");
 	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
 		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
 			emit(it->second.getInternalName());
@@ -474,9 +475,9 @@ bool Compiler::isNonKeyId(string s) // determines if s is a non_key_id
 
 bool Compiler::isInteger(string s) const// determines if s is an integer
    {
-      if (isdigit(s[i]) == false) {
+      if (isdigit(s) == false) {
          return false;
-      } else{return true}  
+      } else{return true;}  
    }   
       
    
