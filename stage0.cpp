@@ -482,7 +482,7 @@ bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
          return false;
       }
       //run through rest of string
-      for (int i = 1; i < s.length(); i++) {
+      for (uint i = 1; i < s.length(); i++) {
          if (!((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9') || s[i] == ' ')) {
          
          return false;
@@ -493,9 +493,12 @@ bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
 
 bool Compiler::isInteger(string s) const// determines if s is an integer
    {
-      if (isdigit(s) == false) {
-         return false;
-      } else{return true;}  
+      for (uint i = 1; i < s.length(); i++) {
+         if (s[i] == '0' || s[i] == '1' || s[i] == '2' || s[i] == '3' || s[i] == '4' || s[i] == '5' || s[i] == '6' || s[i] == '7' || s[i] == '8' || s[i] == '9') {
+            return true;
+         }
+      return false;
+      }
    }   
       
    
