@@ -336,9 +336,8 @@ string Compiler::nextToken() //returns the next token or end of file marker
                break;
 				case islower(ch) : 
                token = ch;
-               // I might be fucking up here idk if this is the proper way to do it
                String s = nextChar();
-               while (//fixme)
+               while (isNonKeyId(s) && s != END_OF_FILE)
                   {
                      token+=ch;
 						}	
@@ -366,7 +365,6 @@ string Compiler::nextToken() //returns the next token or end of file marker
 }
 char Compiler::nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
 {
-   //get the next character
    if (ch =='$') {
       ch = END_OF_FILE    
    } else {
@@ -381,17 +379,11 @@ char Compiler::nextChar() //returns the next character or end of file marker ¯\
 
 void Compiler::emit(string label, string instruction, string operands, string comment)
    {
-      //Turn on left justification in objectFile should probably just use setw() for these
-
-      //objectFile << '{0: <9}'.format(label);
-      //objectFile << '{0: <9}'.format(instruction);
-      //objectFile << '{0: <25}'.format(operands);
+      objectFile << left;
       objectFile << setw(8) << label;
       objectFile << setw(8) << instruction;
       objectFile << setw(24) << operands ;
-      objectFile << left;
       objectFile << comment << endl;
-      // probs not right idk wtf is goin on
    }
 
 void Compiler::emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
@@ -407,6 +399,7 @@ void Compiler::emitPrologue(string progName, string operand2) // might be right 
       emit("SECTION", ".text")
       emit("global", "_start", "", "; program" + progName)
       emit("\n_start:")
+      //FIXME
    }
 
 
@@ -432,20 +425,10 @@ void Compiler::emitStorage()
 		}
 	}
 
-bool Compiler::isKeyword(string s) // determines if s is a keyword idk if this is what he wants
-   { // took all keywords and put them in a set to test against the string s
-      set<string> keywords = { "program",  // set is a  data structure that conatains the same types of data
-"begin",
-"end",
-"var",
-"const",
-"integer",
-"boolean",
-"true",
-"false",
-"not"};
- 
-      if (keywords.count(s)) {return true};// should count the occurences of s in the keywords set hopefully returns true if s is one of those keywords
+bool isKeyword(string s)
+   { 
+      set<string> keywords = { "program", "begin", "end", "var", "const", "integer", "boolean", "true", "false", "not"};
+      if (keywords.count(s)) {return true};
       return false 
    }
 
@@ -482,18 +465,18 @@ bool Compiler::isSpecialSymbol(char c) // determines if c is a special symbol
 
 bool Compiler::isNonKeyId(string s) // determines if s is a non_key_id
    {
-      if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) { //checking if the first character is valid
+      if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) {
          
          return false;
       }
       //run through rest of string
       for (int i = 1; i < s.length(); i++) {
-         if (!((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9') || s[i] == ' ')) { //checking if the first character is valid
+         if (!((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9') || s[i] == ' ')) {
          
          return false;
       }
       }
-      return true; //should return true if s is a nonkeyid
+      return true; 
    }
 
 bool Compiler::isInteger(string s) // determines if s is an integer
@@ -507,7 +490,7 @@ bool Compiler::isInteger(string s) // determines if s is an integer
 
 bool Compiler::isBoolean(string s) const // determines if s is a boolean
    {
-      if (s == "true" || s == "false") { // idk what to put here i looked up some examples and a lot of them pointed to this way
+      if (s == "true" || s == "false") { 
          //code here... maybe
          return true;
       }
@@ -536,8 +519,34 @@ bool Compiler::isLiteral(string s) // determines if s is a literal
          return true;
          break;
          default:
-         return false; // s is not a literal
+         return false;
          break;   
 
       }
+   }
+bool genInternalName(storeTypes s) // determines if s is a literal
+   {
+      cout << "enter genName" << endl;
+	   string newName;
+      //FIXME MAYBE
+	   static int numBool, numInt, numProg;
+	   if (s == BOOLEAN){
+         newName = "B";
+         newName += to_string(numBool);
+         numBool++;
+      }
+	
+      if (s == INTEGER){
+         newName = "I";
+         newName += to_string(numInt);
+         numInt++;
+      }
+      
+      if (s == PROG_NAME){
+         newName = "P";
+         newName += to_string(numProg);
+         numProg++;
+      }
+      
+      return newName;
    }
