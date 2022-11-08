@@ -5,7 +5,7 @@
 
 #include <ctime>
 #include <iostream> 
-#include <ctype.h>
+#include <cctype>
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -306,58 +306,60 @@ string Compiler::nextToken() //returns the next token or end of file marker
 	token = "";
 	while (token == "")
 	{
-		switch(ch)
-			{
-				case '{' : //process comment
-					while (nextChar() != sourceFile.eof() || nextChar() != '}')
-					{
-						if (ch == sourceFile.eof())
+      if (ch == '{') 
+         {
+         while (nextChar() != sourceFile.eof() || nextChar() != '}')
+            {
+               if (ch == sourceFile.eof())
                          processError("unexpected end of file");
 						else
                          nextChar();
+            }
+         }
+      else if (ch == '}') 
+         {
+            processError("\'}\' cannot begin token");
+         }
+      else if (isspace(ch)) 
+         {
+            nextChar();
+         }
+      else if (isSpecialSymbol(ch))
+         {
+            token = ch;
+				nextChar();
+         }
+      else if (islower(ch)) 
+         {
+            token = ch;
+            while (isNonKeyId(ch) && ch != sourceFile.eof())
+               {
+                  token+=ch;
+					}	
+            if (ch == sourceFile.eof())
+               processError("unexpected end of file");
+         }
+      else if (isdigit(ch))
+         {
+            token = ch;
+            while (isInteger(ch) && ch != sourceFile.eof())
+               {
+                  token+=ch;
                }
-                   break;
-				case '}' : 
-               processError("\'}\' cannot begin token");
-               break;            
-            
-				case isspace(ch) : 
-               nextChar();
-               break;
-				case isSpecialSymbol(ch): 
-               token = ch;
-					nextChar();
-               break;
-				case islower(ch) : 
-               token = ch;
-               String s = nextChar();
-               while (isNonKeyId(s) && s != sourceFile.eof())
-                  {
-                     token+=ch;
-						}	
-               if (ch == sourceFile.eof())
-                  processError("unexpected end of file");
-               break;
-            case isdigit(ch) :
-               token = ch;
-               String s = nextChar();
-               while (isInteger(s) && s != sourceFile.eof())
-                  {
-                     token+=ch;
-                  }
-               if (ch == sourceFile.eof())
-                  processError("unexpected end of file");
-               break;
-            case sourceFile.eof() : 
-               token = ch;
-               break;
-            default : 
-               processError("illegal symbol");
-            break; // this is a superstitous break, i know i probably dont need it 
+            if (ch == sourceFile.eof())
+               processError("unexpected end of file");
+         }
+      else if (ch == sourceFile.eof())
+         {
+            token = ch;
+         }
+      else {
+            processError("illegal symbol");
+      }
     }
     return token;
 }
-char Compiler::nextChar() //returns the next character or end of file marker ¯\_(ツ)_/¯
+char Compiler::nextChar()
 {
    sourceFile.get(ch);
    if (sourceFile.eof()) {
@@ -368,7 +370,7 @@ char Compiler::nextChar() //returns the next character or end of file marker ¯\
       listingFile << right << setw(5) << lineNo << '|';
    } 
    listingFile << ch;
-   else if (ch == '\n') {
+   if (ch == '\n') {
       lineNo +=1;
       listingFile << right << setw(5) << lineNo << '|';
    }
@@ -385,17 +387,16 @@ void Compiler::emit(string label, string instruction, string operands, string co
       objectFile << comment << endl;
    }
 
-void emitPrologue(string progName, string operand2) // might be right idk  ¯\_(ツ)_/¯
+void Compiler::emitPrologue(string progName, string operand2)
    {
       time_t now = time (NULL);
       objectFile << "Alex Garcia && Adebolanle Balogun" << ctime(&now) <<endl;
       objectFile << "%INCLUDE Along32.inc:" << endl;
       objectFile << "%INCLUDE Macros_Along.inc" << endl;
-      emit("SECTION", ".text")
-      emit("global", "_start", "", "; program" + progName)
-      emit("\n_start:")
+      emit("SECTION", ".text");
+      emit("global", "_start", "", "; program" + progName);
+      emit("\n_start:");
    }
-
 
 void Compiler::emitEpilogue(string operand1, string operand2)
    {
@@ -500,7 +501,6 @@ bool Compiler::isInteger(string s) const// determines if s is an integer
 bool Compiler::isBoolean(string s) const // determines if s is a boolean
    {
       if (s == "true" || s == "false") { 
-         //code here... maybe
          return true;
       }
       return false;
@@ -521,31 +521,7 @@ bool Compiler::isLiteral(string s) const // determines if s is a literal
       else if (s == "+")
          return true;
       return false;
-      /*switch (cock) {
-         case isInteger(s):
-         return true;
-         break;
-         case "false":
-         return true;
-         break;
-         case "true":
-         return true;
-         break;
-         case "not":
-         return true;
-         break;
-         case "-":
-         return true;
-         break;      
-         case "+":
-         return true;
-         break;
-         default:
-         return false;
-         break; */  
-      
    }
-//string Compiler::genInternalName(storeTypes stype) const{
   string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
    {
 	   string newName;
