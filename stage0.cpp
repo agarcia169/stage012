@@ -333,7 +333,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
       else if (islower(ch)) 
          {
             token = ch;
-            string n = ch;
+            string n(1, ch);
             while (isNonKeyId(n) && ch != sourceFile.eof())
                {
                   token+=ch;
@@ -344,7 +344,8 @@ string Compiler::nextToken() //returns the next token or end of file marker
       else if (isdigit(ch))
          {
             token = ch;
-            while (isInteger(ch) && ch != sourceFile.eof())
+            string d(1, ch);
+            while (isInteger(d) && ch != sourceFile.eof())
                {
                   token+=ch;
                }
@@ -497,8 +498,8 @@ bool Compiler::isInteger(string s) const// determines if s is an integer
          if (s[i] == '0' || s[i] == '1' || s[i] == '2' || s[i] == '3' || s[i] == '4' || s[i] == '5' || s[i] == '6' || s[i] == '7' || s[i] == '8' || s[i] == '9') {
             return true;
          }
-      return false;
       }
+      return false;
    }   
       
    
