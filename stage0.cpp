@@ -34,14 +34,14 @@ Compiler::~Compiler() // destructor
 void Compiler::createListingHeader()
    {
       time_t now = time (NULL);
-      cout << "STAGE0:  Alex Garcia & Adebolanle Balogun" << ctime(&now) << "\n";
-      cout << "LINE NO:               " << "SOURCE STATEMENT\n";
-      //line numbers and source statements should be aligned under the headings
+      listingFile << "STAGE0:  Alex Garcia & Adebolanle Balogun" << ctime(&now) << "\n";
+      listingFile << "LINE NO:               " << "SOURCE STATEMENT\n";
    }
 
 void Compiler::parser()
    {
       nextChar();
+      cout << "shit\n";
       if (nextToken() != "program")
          processError("keyword \"program\" expected");
       prog();
@@ -50,13 +50,13 @@ void Compiler::parser()
 void Compiler::createListingTrailer()
    {
       //possible right needed to justify right
-      cout << "COMPILATION TERMINATED " << errorCount <<  " ERRORS ENCOUNTERED\n";
+      listingFile << "COMPILATION TERMINATED " << errorCount <<  " ERRORS ENCOUNTERED\n";
    }
 
 void Compiler::processError(string err)
    {
       errorCount++;
-      listingFile << "Error: " << "Line "<< lineNo << ": " << err << "\n";
+      listingFile << "Error: " << "Line "<< lineNo << ". " << err << "\n";
       createListingTrailer();
       exit(1);
    }
@@ -273,7 +273,6 @@ void Compiler::varStmts() //token should be NON_KEY_ID
       y = token;
       if (nextToken() != ";")
          processError("semicolon expected");
-         //FIXME MAY NEED additional whichtype around existing whichtype
       insert(x,whichType(y),VARIABLE,"",YES,1);
       //Double Check here to the pseudocode
       if (nextToken() != "begin" || !isNonKeyId(nextToken()))
@@ -305,20 +304,20 @@ string Compiler::ids() //token should be NON_KEY_ID
 
 string Compiler::nextToken() //returns the next token or end of file marker
 {
-   cout << "Executing line: " << __LINE__ << '\n';
+   cout << "entered the nextToken zone\n";
 	token = "";
 	while (token == "")
 	{
-		switch(ch)
-			{
-				case '{' : //process comment
-					while (nextChar() != sourceFile.eof() || nextChar() != '}')}
-					{
-						if (ch == sourceFile.eof())
+      cout << __LINE__ << endl;
+      if (ch == '{') 
+         {
+         while (nextChar() != sourceFile.eof() || nextChar() != '}')
+            {
+               if (ch == sourceFile.eof())
                          processError("unexpected end of file");
 						else
                          nextChar();
-               
+            }
          }
       else if (ch == '}') 
          {
@@ -335,11 +334,14 @@ string Compiler::nextToken() //returns the next token or end of file marker
          }
       else if (islower(ch)) 
          {
-            token = ch;
+            cout << __LINE__ << endl;
             string n(1, ch);
-            while (isNonKeyId(n) && ch != sourceFile.eof())
+            while (isNonKeyId(n) && ch != END_OF_FILE)
                {
+                  cout << __LINE__ << endl;
                   token+=ch;
+                  nextChar();
+                  cout << token << endl;
 					}	
             if (ch == sourceFile.eof())
                processError("unexpected end of file");
@@ -357,28 +359,30 @@ string Compiler::nextToken() //returns the next token or end of file marker
          }
       else if (ch == sourceFile.eof())
          {
+            cout << __LINE__ << endl;
             token = ch;
          }
       else {
             processError("illegal symbol");
       }
     }
+    cout << __LINE__ << endl;
     return token;
 }
 char Compiler::nextChar()
 {
-   cout << "Executing line: " << __LINE__ << '\n';
    sourceFile.get(ch);
    if (sourceFile.eof()) {
       ch = '$';  
       return ch;
-   } else if (lineNo == 0){
-      lineNo +=1;
+   }
+   if (lineNo == 0){
+      lineNo++;
       listingFile << right << setw(5) << lineNo << '|';
    } 
    listingFile << ch;
    if (ch == '\n') {
-      lineNo +=1;
+      lineNo++;
       listingFile << right << setw(5) << lineNo << '|';
    }
    return ch;
@@ -413,20 +417,20 @@ void Compiler::emitEpilogue(string operand1, string operand2)
 
 
 void Compiler::emitStorage()
-   {
-      emit("SECTION", ".data");
-      for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
-         if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
-            emit(it->second.getInternalName());
-         }
-      }
-      emit("SECTION", ".bss");
-      for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
-         if(it->second.getAlloc() == YES && it->second.getMode() == VARIABLE){
-            emit(it->second.getInternalName());
-         }
-      }
-   }
+{
+   emit("SECTION", ".data");
+	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
+			emit(it->second.getInternalName());
+		}
+	}
+	emit("SECTION", ".bss");
+	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+		if(it->second.getAlloc() == YES && it->second.getMode() == VARIABLE){
+			emit(it->second.getInternalName());
+		}
+	}
+}
 bool Compiler::isKeyword(string s) const
    { 
       set<string> keywords = { "program", "begin", "end", "var", "const", "integer", "boolean", "true", "false", "not"};
@@ -482,25 +486,22 @@ bool Compiler::isSpecialSymbol(char c) const // determines if c is a special sym
 
 bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
    {
-      if (!((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z') || s[0] == ' ')) {
-         
-         return false;
-      }
+      if (((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z'))) {
       //run through rest of string
-      for (uint i = 1; i < s.length(); i++) {
-         if (!((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9') || s[i] == ' ')) {
-         
-         return false;
+      cout << __LINE__ << endl;
+         for (uint i = 1; i < s.length(); i++) {
+            if (((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9'))) {
+            cout << __LINE__ << endl;
+            return false;
+            }
+         }
       }
-      }
+      cout << __LINE__ << endl;
       return true; 
    }
 
 bool Compiler::isInteger(string s) const// determines if s is an integer
    {
-      if (isdigit(s) == false) {
-         return false;
-      } else{return true;}  
       for (uint i = 1; i < s.length(); i++) {
          if (s[i] == '0' || s[i] == '1' || s[i] == '2' || s[i] == '3' || s[i] == '4' || s[i] == '5' || s[i] == '6' || s[i] == '7' || s[i] == '8' || s[i] == '9') {
             return true;
@@ -538,8 +539,7 @@ bool Compiler::isLiteral(string s) const // determines if s is a literal
   string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
    {
 	   string newName;
-      //FIXME MAYBE
-	   static int numBool, numInt, numProg;
+	   static int numBool, numInt, numProg = 0;
 	   if (stype == BOOLEAN){
          newName = "B";
          newName += to_string(numBool);
