@@ -11,6 +11,8 @@
 #include <cmath>
 #include <algorithm>
 #include <stage0.h>
+#include <iomanip>
+#include <set>
 
 using namespace std;
 
@@ -74,7 +76,7 @@ allocation inAlloc, int inUnits)
          processError("illegal use of keyword");
       else //create table entry
          {
-            if (isUpper(name[0]))
+            if (isupper(name[0]))
                symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
             else
             //does this:                                 
@@ -148,8 +150,7 @@ void Compiler::prog() //token should be "program"
    if (token != "begin")
       processError("keyword \"begin\" expected");
    beginEndStmt();
-   //seof check
-   if (token != END_OF_FILE)
+   if (token[0] != END_OF_FILE)
       processError("no text may follow \"end\"");
 }
 
@@ -160,7 +161,7 @@ void Compiler::progStmt() //token should be "program"
       string x;
       if (token != "program")
          processError("keyword \"program\" expected");
-      x = NextToken();
+      x = nextToken();
       if (!isNonKeyId(x))
       //FIXME dont know if PROG_NAME is the correct way to do this
          processError(PROG_NAME + " expected");
@@ -207,7 +208,7 @@ for (string::iterator it = token.begin(); it != token.end; ++it)
 {
    cout << "you just entered the beginEndStmt zone\n";
    if (token != "begin")
-      procesError("keyword \"begin\" expected");
+      processError("keyword \"begin\" expected");
    if (nextToken() != "end")
       processError("keyword \"end\" expected");
    if (nextToken() != ".")
@@ -272,7 +273,8 @@ void Compiler::varStmts() //token should be NON_KEY_ID
       y = token;
       if (nextToken() != ";")
          processError("semicolon expected");
-      insert(x,y,VARIABLE,"",YES,1);
+         //FIXME MAY NEED additional whichtype around existing whichtype
+      insert(x,whichType(y),VARIABLE,"",YES,1);
       //Double Check here to the pseudocode
       if (nextToken() != "begin" || !isNonKeyId(nextToken()))
          processError("non-keyword identifier or \"begin\" expected");
@@ -292,7 +294,7 @@ string Compiler::ids() //token should be NON_KEY_ID
       if (nextToken() == ",")
          {
             if (!isNonKeyId(nextToken()))
-               processError("non-keyword identifier expected")
+               processError("non-keyword identifier expected");
             tempString = temp + "," + ids();
          }
       return tempString;
@@ -310,51 +312,56 @@ string Compiler::nextToken() //returns the next token or end of file marker
 		switch(ch)
 			{
 				case '{' : //process comment
-					while (nextChar() != END_OF_FILE || nextChar() != '}'}
+					while (nextChar() != sourceFile.eof() || nextChar() != '}')}
 					{
-						if (ch == END_OF_FILE)
+						if (ch == sourceFile.eof())
                          processError("unexpected end of file");
 						else
                          nextChar();
+               
+         }
+      else if (ch == '}') 
+         {
+            processError("\'}\' cannot begin token");
+         }
+      else if (isspace(ch)) 
+         {
+            nextChar();
+         }
+      else if (isSpecialSymbol(ch))
+         {
+            token = ch;
+				nextChar();
+         }
+      else if (islower(ch)) 
+         {
+            token = ch;
+            string n(1, ch);
+            while (isNonKeyId(n) && ch != sourceFile.eof())
+               {
+                  token+=ch;
+					}	
+            if (ch == sourceFile.eof())
+               processError("unexpected end of file");
+         }
+      else if (isdigit(ch))
+         {
+            token = ch;
+            string d(1, ch);
+            while (isInteger(d) && ch != sourceFile.eof())
+               {
+                  token+=ch;
                }
-                   break;
-				case '}' : 
-               processError("\'}\' cannot begin token");
-               break;            
-            
-				case isspace(ch) : 
-               nextChar();
-               break;
-				case isSpecialSymbol(ch): 
-               token = ch;
-					nextChar();
-               break;
-				case islower(ch) : 
-               token = ch;
-               String s = nextChar();
-               while (isNonKeyId(s) && s != END_OF_FILE)
-                  {
-                     token+=ch;
-						}	
-               if (ch == END_OF_FILE)
-                  processError("unexpected end of file");
-               break;
-            case isdigit(ch) :
-               token = ch;
-               String s = nextChar();
-               while (isInteger(s) && s != END_OF_FILE)
-                  {
-                     token+=ch;
-                  }
-               if (ch == END_OF_FILE)
-                  processError("unexpected end of file");
-               break;
-            case END_OF_FILE : 
-               token = ch;
-               break;
-            default : 
-               processError("illegal symbol");
-            break; // this is a superstitous break, i know i probably dont need it 
+            if (ch == sourceFile.eof())
+               processError("unexpected end of file");
+         }
+      else if (ch == sourceFile.eof())
+         {
+            token = ch;
+         }
+      else {
+            processError("illegal symbol");
+      }
     }
     return token;
 }
@@ -389,6 +396,7 @@ void Compiler::emit(string label, string instruction, string operands, string co
 
 void Compiler::emitPrologue(string progName, string operand2)
    {
+      time_t now = time (NULL);
       objectFile << "Alex Garcia && Adebolanle Balogun" << ctime(&now) <<endl;
       objectFile << "%INCLUDE Along32.inc:" << endl;
       objectFile << "%INCLUDE Macros_Along.inc" << endl;
@@ -405,20 +413,20 @@ void Compiler::emitEpilogue(string operand1, string operand2)
 
 
 void Compiler::emitStorage()
-// not sure if right but this is how the other longboard guy explained it to me
-   emit("SECTION", ".data");
-	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
-		if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
-			emit(it->second.getInternalName());
-		}
-	}
-	emit("SECTION", ".bss");
-	for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
-		if(it->second.getAlloc() == YES && it->second.getMode() == VARIABLE){
-			emit(it->second.getInternalName());
-		}
-	}
-}
+   {
+      emit("SECTION", ".data");
+      for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+         if(it->second.getAlloc() == YES && it->second.getMode() == CONSTANT){
+            emit(it->second.getInternalName());
+         }
+      }
+      emit("SECTION", ".bss");
+      for (auto it = symbolTable.begin(); it != symbolTable.end(); ++it){
+         if(it->second.getAlloc() == YES && it->second.getMode() == VARIABLE){
+            emit(it->second.getInternalName());
+         }
+      }
+   }
 bool Compiler::isKeyword(string s) const
    { 
       set<string> keywords = { "program", "begin", "end", "var", "const", "integer", "boolean", "true", "false", "not"};
@@ -490,9 +498,15 @@ bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
 
 bool Compiler::isInteger(string s) const// determines if s is an integer
    {
-      if (isdigit(s[i]) == false) {
+      if (isdigit(s) == false) {
          return false;
-      } else{return true}  
+      } else{return true;}  
+      for (uint i = 1; i < s.length(); i++) {
+         if (s[i] == '0' || s[i] == '1' || s[i] == '2' || s[i] == '3' || s[i] == '4' || s[i] == '5' || s[i] == '6' || s[i] == '7' || s[i] == '8' || s[i] == '9') {
+            return true;
+         }
+      }
+      return false;
    }   
       
    
@@ -505,7 +519,7 @@ bool Compiler::isBoolean(string s) const // determines if s is a boolean
       return false;
    }
 
-bool Compiler::isLiteral(string s) // determines if s is a literal
+bool Compiler::isLiteral(string s) const // determines if s is a literal
    {
       if (isInteger(s))
          return true;
@@ -521,24 +535,24 @@ bool Compiler::isLiteral(string s) // determines if s is a literal
          return true;
       return false;
    }
-bool Compiler::genInternalName(storeTypes s) // determines if s is a literal
+  string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
    {
 	   string newName;
       //FIXME MAYBE
 	   static int numBool, numInt, numProg;
-	   if (s == BOOLEAN){
+	   if (stype == BOOLEAN){
          newName = "B";
          newName += to_string(numBool);
          numBool++;
       }
 	
-      if (s == INTEGER){
+      if (stype == INTEGER){
          newName = "I";
          newName += to_string(numInt);
          numInt++;
       }
       
-      if (s == PROG_NAME){
+      if (stype == PROG_NAME){
          newName = "P";
          newName += to_string(numProg);
          numProg++;
