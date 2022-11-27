@@ -554,33 +554,6 @@ bool Compiler::isSpecialSymbol(char c) const // determines if c is a special sym
          return true;
       else
          return false;
-        
-      /*switch (c) {
-         case ';':
-         return true;
-         break;
-         case ':':
-         return true;
-         break;
-         case ',':
-         return true;
-         break;
-         case '.':
-         return true;
-         break;
-         case '-':
-         return true;
-         break;      
-         case '+':
-         return true;
-         break;
-         case '=':
-         return true;
-         break;
-         default:
-         return false; // if it is not a special symbol   
-         break;   
-*/
       }
    //}
 bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
@@ -681,30 +654,39 @@ string Compiler::popOperand() //pop name from operandStk
          processError("compiler error; operand stack underflow")
    }
 
-   string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
-      {
-         string newName;
-         static int numBool, numInt, numProg = 0;
-         if (stype == BOOLEAN){
-            newName = "B";
-            newName += to_string(numBool);
-            numBool++;
-         }
-      
-         if (stype == INTEGER){
-            newName = "I";
-            newName += to_string(numInt);
-            numInt++;
-         }
-         
-         if (stype == PROG_NAME){
-            newName = "P";
-            newName += to_string(numProg);
-            numProg++;
-         }
-         
-         return newName;
+string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
+   {
+      string newName;
+      static int numBool, numInt, numProg = 0;
+      if (stype == BOOLEAN){
+         newName = "B";
+         newName += to_string(numBool);
+         numBool++;
       }
+      
+      if (stype == INTEGER){
+         newName = "I";
+         newName += to_string(numInt);
+         numInt++;
+      }
+         
+      if (stype == PROG_NAME){
+         newName = "P";
+         newName += to_string(numProg);
+         numProg++;
+      }
+         
+      return newName;
+   }
+
+// void Compiler::emit(string label, string instruction, string operands, string comment)
+//    {
+//       objectFile << left;
+//       objectFile << setw(8) << label;
+//       objectFile << setw(8) << instruction;
+//       objectFile << setw(24) << operands ;
+//       objectFile << comment << endl;
+//    }
 
 //STAGE 1 ADDITION
 void Compiler::emitAdditionCode(string operand1,string operand2) //add operand1 to operand2
@@ -848,6 +830,7 @@ void Compiler::emitNotCode(string operand1, string = "")
       //gfsdf
    }
 
+
 void Compiler::emitAssignCode(string operand1,string operand2) //assign the value of operand1 to operand2
    {
       if types of operands are not the same
@@ -868,17 +851,17 @@ void Compiler::emitReadCode(string operand, string operand2)
    {
       string name
       while (name is broken from list (operand) and put in name != "")
-      {
-      if () //name is not in symbol table
-         processError("reference to undefined symbol")
-      if () //data type of name is not INTEGER
-         processError("can\'t read variables of this type")
-      if () //storage mode of name is not VARIABLE
-         processError("attempting to read to a read-only location")
-      emit code to call the Irvine ReadInt function
-      emit code to store the contents of the A register at name
-      set the contentsOfAReg = name
-      }
+         {
+            if () //name is not in symbol table
+               processError("reference to undefined symbol")
+            if () //data type of name is not INTEGER
+               processError("can\'t read variables of this type")
+            if () //storage mode of name is not VARIABLE
+               processError("attempting to read to a read-only location")
+            emit code to call the Irvine ReadInt function
+            emit code to store the contents of the A register at name
+            set the contentsOfAReg = name
+         }
    }
    
 void Compiler::emitWriteCode(string operand, string operand2)
@@ -905,7 +888,7 @@ void Compiler::freeTemp()
          processError("compiler error, currentTempNo should be ≥ –1")
    }
    
-   
+
 string Compiler::getTemp()
    {
       string temp;
