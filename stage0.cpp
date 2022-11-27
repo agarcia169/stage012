@@ -122,15 +122,40 @@ string Compiler::whichValue(string name) //tells which value a name has
    }
 
 
-
+//FIXME
 void Compiler::code(string op, string operand1, string operand2)
    {
       if (op == "program")
          emitPrologue(operand1);
       else if (op == "end")
          emitEpilogue();
+      else if (op == "read")
+         emit read code
+      else if (op == "write")
+         emit write code
+      else if (op == "+") // this must be binary '+'
+         emit addition code
+      else if (op == "-") // this must be binary '-'
+         emit subtraction code
+      else if (op == "neg") // this must be unary '-'
+         emit negation code;
+      else if (op == "not")
+         emit not code
+      else if (op == "*")
+         emit multiplication code
+      else if (op == "div")
+         emit division code
+      else if (op == "mod")
+         emit modulo code
+      else if (op == "and")
+         emit and code
+      ...
+      else if (op == "=")
+         emit equality code
+      else if (op == ":=")
+         emit assignment code
       else
-         processError("compiler error since function code should not be called with illegal arguments");
+         processError("compiler error since function code should not be called with illegal arguments")
    }
 
 
@@ -200,12 +225,6 @@ void Compiler::vars() //token should be "var"
 
 // beginEndStmt() - production 5 ¯\_(ツ)_/¯
 void Compiler::beginEndStmt() //token should be "begin"
-/*
-string token()
-for (string::iterator it = token.begin(); it != token.end; ++it)
-   cout << *it << '\n'
-   just realized this would just loop through the whole string but if edited will give you the begining of the string i hope
-*/
 {
    cout << "you just entered the beginEndStmt zone\n";
    if (token != "begin")
@@ -299,6 +318,7 @@ string Compiler::ids() //token should be NON_KEY_ID
          }
       return tempString;
    }
+//FIXME check whether or not the remaining 5 prods need creation
 
 void execStmts(); // stage 1, production 2
 {
@@ -602,96 +622,121 @@ bool Compiler::isLiteral(string s) const // determines if s is a literal
          return true;
       return false;
    }
-   
+
+//STAGE 1 ADDITION   
 void pushOperator(string name) //push name onto operatorStk
    {
-      push name onto stack;
+      operatorStk.push(name);
    }
 
+//STAGE 1 ADDITION
+//FIXME
 void pushOperand(string name) //push name onto operandStk
    //if name is a literal, also create a symbol table entry for it
    {
-      if name is a literal and has no symbol table entry
-      insert symbol table entry, call whichType to determine the data type of the literal
-      push name onto stack;
+      if (isLiteral(name) && has no symbol table entry)
+         insert symbol table entry, call whichType to determine the data type of the literal
+      operandStk.push(name);
    }
-   
+
+//STAGE 1 ADDITION   
 string popOperator() //pop name from operatorStk
    {
-      if operatorStk is not empty
-      return top element removed from stack;
+      if (!operatorStk.empty())
+         {
+            //FIXME maybe... not sure about auto here
+            auto item = operatorStk.top();
+            operatorStk.pop();
+            return item;
+         }
       else
-      processError(compiler error; operator stack underflow)
+         processError("compiler error; operator stack underflow");
    }
 
+//STAGE 1 ADDITION
 string popOperand() //pop name from operandStk
    {
-      if operandStk is not empty
-      return top element removed from stack;
+      if (!operandStk.empty())
+         {
+            //FIXME maybe... not sure about auto here
+            auto item = operandStk.top();
+            operandStk.pop();
+            return item;
+         }
       else
-      processError(compiler error; operand stack underflow)
+         processError("compiler error; operand stack underflow")
    }
 
-  string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
-   {
-	   string newName;
-	   static int numBool, numInt, numProg = 0;
-	   if (stype == BOOLEAN){
-         newName = "B";
-         newName += to_string(numBool);
-         numBool++;
-      }
-	
-      if (stype == INTEGER){
-         newName = "I";
-         newName += to_string(numInt);
-         numInt++;
-      }
+   string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
+      {
+         string newName;
+         static int numBool, numInt, numProg = 0;
+         if (stype == BOOLEAN){
+            newName = "B";
+            newName += to_string(numBool);
+            numBool++;
+         }
       
-      if (stype == PROG_NAME){
-         newName = "P";
-         newName += to_string(numProg);
-         numProg++;
+         if (stype == INTEGER){
+            newName = "I";
+            newName += to_string(numInt);
+            numInt++;
+         }
+         
+         if (stype == PROG_NAME){
+            newName = "P";
+            newName += to_string(numProg);
+            numProg++;
+         }
+         
+         return newName;
       }
-      
-      return newName;
-   }
+
+//STAGE 1 ADDITION
 void emitAdditionCode(string operand1,string operand2) //add operand1 to operand2
    {
-      if type of either operand is not integer
-      processError(illegal type)
-      if the A Register holds a temp not operand1 nor operand2 then
-      emit code to store that temp into memory
-      change the allocate entry for the temp in the symbol table to yes
-      deassign it
-      if the A register holds a non-temp not operand1 nor operand2 then deassign it
-      if neither operand is in the A register then
-      emit code to load operand2 into the A register
-      emit code to perform register-memory addition
-      deassign all temporaries involved in the addition and free those names for reuse
-      A Register = next available temporary name and change type of its symbol table entry to integer
-      push the name of the result onto operandStk
+      if (!isInteger(operand1) || !isInteger(operand2))
+         processError("illegal type")
+      if (contentsOfAReg[0] == 'T') // the A Register holds a temp not operand1 nor operand2 
+         {
+            //then emit code to store that temp into memory 
+            //change the allocate entry for the temp in the symbol table to yes 
+            //deassign the temp
+         }
+      if () //the A register holds a non-temp not operand1 nor operand2 
+         // then deassign it
+      if () //neither operand is in the A register then
+         {
+            //emit code to load operand2 into the A register
+            //emit code to perform register-memory addition
+            //deassign all temporaries involved in the addition and free those names for reuse
+            //A Register = next available temporary name and change type of its symbol table entry to integer
+            //push the name of the result onto operandStk
+         }
    }
-   
+//STAGE 1 ADDITION  
 void emitSubtractionCode(string operand1,string operand2) 
    {
-      //emit subtraction code here
+      if (!isInteger(operand1) || !isInteger(operand2))
+         processError("illegal type")
    }
   
 void emitMultiplicationCode(string operand1,string operand2) 
    {
-      //emit subtraction code here
+      if (!isInteger(operand1) || !isInteger(operand2))
+         processError("illegal type")
    }
 
 void emitModuloCode(string operand1, string operand2)
    {
-      //adsf
+      if (!isInteger(operand1) || !isInteger(operand2))
+         processError("illegal type")
    }
    
 void emitDivisionCode(string operand1,string operand2) //divide operand2 by operand1
    {
-      if type of either operand is not integer
-      processError(illegal type)
+      if (!isInteger(operand1) || !isInteger(operand2))
+         processError("illegal type")
       if the A Register holds a temp not operand2 then
       emit code to store that temp into memory
       change the allocate entry for it in the symbol table to yes
@@ -708,8 +753,8 @@ void emitDivisionCode(string operand1,string operand2) //divide operand2 by oper
    
 void emitAndCode(string operand1,string operand2) //and operand1 to operand2
    {
-      if type of either operand is not boolean
-      processError(illegal type)
+      if (!isBoolean(operand1) || !isBoolean(operand2))
+         processError("illegal type")
       if the A Register holds a temp not operand1 nor operand2 then
       emit code to store that temp into memory
       change the allocate entry for the temp in the symbol table to yes
@@ -725,12 +770,13 @@ void emitAndCode(string operand1,string operand2) //and operand1 to operand2
    
 void emitOrCode(string operand1,string operand2) //and operand1 to operand2
    {
-      //emit OR code
+      if (!isBoolean(operand1) || !isBoolean(operand2))
+         processError("illegal type")
    }
    
 void emitEqualityCode(string operand1,string operand2) //test whether operand2 equals operand1
    {
-      if types of operands are not the same
+      if () //types of operands are not the same
       processError(incompatible types)
       if the A Register holds a temp not operand1 nor operand2 then
       emit code to store that temp into memory
@@ -809,12 +855,12 @@ void emitReadCode(string operand, string operand2)
       string name
       while (name is broken from list (operand) and put in name != "")
       {
-      if name is not in symbol table
-      processError(reference to undefined symbol)
-      if data type of name is not INTEGER
-      processError("can\'t read variables of this type")
-      if storage mode of name is not VARIABLE
-      processError(attempting to read to a read-only location)
+      if () //name is not in symbol table
+         processError("reference to undefined symbol")
+      if () //data type of name is not INTEGER
+         processError("can\'t read variables of this type")
+      if () //storage mode of name is not VARIABLE
+         processError("attempting to read to a read-only location")
       emit code to call the Irvine ReadInt function
       emit code to store the contents of the A register at name
       set the contentsOfAReg = name
