@@ -304,7 +304,7 @@ void Compiler::varStmts() //token should be NON_KEY_ID
 //ids() - production 8
 string Compiler::ids() //token should be NON_KEY_ID
    {
-      cout << "you just entered the ids zone\n";
+      
       string temp,tempString;
       if (!isNonKeyId(token))
          processError("non-keyword identifier expected");
@@ -320,64 +320,78 @@ string Compiler::ids() //token should be NON_KEY_ID
    }
 //FIXME check whether or not the remaining 5 prods need creation
 
-void execStmts(); // stage 1, production 2
+void Compiler::execStmts(); // stage 1, production 2
 {
+   cout << "you just entered the execStmts zone\n";
+   
    
 }
 
-void execStmt(); // stage 1, production 3
+void Compiler::execStmt(); // stage 1, production 3
 {
-   
+   cout << "you just entered the execStmt zone\n";
+
 }
 
-void assignStmt(); // stage 1, production 4
+void Compiler::assignStmt(); // stage 1, production 4
 {
-   
+   cout << "you just entered the assignStmt zone\n";
+
 }
 
-void readStmt(); // stage 1, production 5
+void Compiler::readStmt(); // stage 1, production 5
 {
-   
+   cout << "you just entered the readStmt zone\n";
+
+
 }
 
-void writeStmt(); // stage 1, production 7
+void Compiler::writeStmt(); // stage 1, production 7
 {
-   
+   cout << "you just entered the writeStmt zone\n";
+
 }
 
-void express(); // stage 1, production 9
+void Compiler::express(); // stage 1, production 9
 {
-   
+   cout << "you just entered the express zone\n";
+
 }
 
-void expresses(); // stage 1, production 10
+void Compiler::expresses(); // stage 1, production 10
 {
-   
+   cout << "you just entered the expresses zone\n";
+
 }
 
-void term(); // stage 1, production 11
+void Compiler::term(); // stage 1, production 11
 {
-   
+   cout << "you just entered the term zone\n";
+
 }
 
-void terms(); // stage 1, production 12
+void Compiler::terms(); // stage 1, production 12
 {
-   
+   cout << "you just entered the terms zone\n";
+
 }
 
-void factor(); // stage 1, production 13
+void Compiler::factor(); // stage 1, production 13
 {
-   
+   cout << "you just entered the factor zone\n";
+
 }
 
-void factors(); // stage 1, production 14
+void Compiler::factors(); // stage 1, production 14
 {
-   
+   cout << "you just entered the factors zone\n";
+
 }
 
-void part(); // stage 1, production 15
+void Compiler::part(); // stage 1, production 15
 {
-   
+   cout << "you just entered the part zone\n";
+
 }
 
 
@@ -624,14 +638,14 @@ bool Compiler::isLiteral(string s) const // determines if s is a literal
    }
 
 //STAGE 1 ADDITION   
-void pushOperator(string name) //push name onto operatorStk
+void Compiler::pushOperator(string name) //push name onto operatorStk
    {
       operatorStk.push(name);
    }
 
 //STAGE 1 ADDITION
 //FIXME
-void pushOperand(string name) //push name onto operandStk
+void Compiler::pushOperand(string name) //push name onto operandStk
    //if name is a literal, also create a symbol table entry for it
    {
       if (isLiteral(name) && has no symbol table entry)
@@ -640,7 +654,7 @@ void pushOperand(string name) //push name onto operandStk
    }
 
 //STAGE 1 ADDITION   
-string popOperator() //pop name from operatorStk
+string Compiler::popOperator() //pop name from operatorStk
    {
       if (!operatorStk.empty())
          {
@@ -654,7 +668,7 @@ string popOperator() //pop name from operatorStk
    }
 
 //STAGE 1 ADDITION
-string popOperand() //pop name from operandStk
+string Compiler::popOperand() //pop name from operandStk
    {
       if (!operandStk.empty())
          {
@@ -693,7 +707,7 @@ string popOperand() //pop name from operandStk
       }
 
 //STAGE 1 ADDITION
-void emitAdditionCode(string operand1,string operand2) //add operand1 to operand2
+void Compiler::emitAdditionCode(string operand1,string operand2) //add operand1 to operand2
    {
       if (!isInteger(operand1) || !isInteger(operand2))
          processError("illegal type")
@@ -715,25 +729,25 @@ void emitAdditionCode(string operand1,string operand2) //add operand1 to operand
          }
    }
 //STAGE 1 ADDITION  
-void emitSubtractionCode(string operand1,string operand2) 
+void Compiler::emitSubtractionCode(string operand1,string operand2) 
    {
       if (!isInteger(operand1) || !isInteger(operand2))
          processError("illegal type")
    }
   
-void emitMultiplicationCode(string operand1,string operand2) 
+void Compiler::emitMultiplicationCode(string operand1,string operand2) 
    {
       if (!isInteger(operand1) || !isInteger(operand2))
          processError("illegal type")
    }
 
-void emitModuloCode(string operand1, string operand2)
+void Compiler::emitModuloCode(string operand1, string operand2)
    {
       if (!isInteger(operand1) || !isInteger(operand2))
          processError("illegal type")
    }
    
-void emitDivisionCode(string operand1,string operand2) //divide operand2 by operand1
+void Compiler::emitDivisionCode(string operand1,string operand2) //divide operand2 by operand1
    {
       if (!isInteger(operand1) || !isInteger(operand2))
          processError("illegal type")
@@ -751,7 +765,7 @@ void emitDivisionCode(string operand1,string operand2) //divide operand2 by oper
       push the name of the result onto operandStk
    }
    
-void emitAndCode(string operand1,string operand2) //and operand1 to operand2
+void Compiler::emitAndCode(string operand1,string operand2) //and operand1 to operand2
    {
       if (!isBoolean(operand1) || !isBoolean(operand2))
          processError("illegal type")
@@ -768,13 +782,13 @@ void emitAndCode(string operand1,string operand2) //and operand1 to operand2
       push the name of the result onto operandStk
    }
    
-void emitOrCode(string operand1,string operand2) //and operand1 to operand2
+void Compiler::emitOrCode(string operand1,string operand2) //and operand1 to operand2
    {
       if (!isBoolean(operand1) || !isBoolean(operand2))
          processError("illegal type")
    }
    
-void emitEqualityCode(string operand1,string operand2) //test whether operand2 equals operand1
+void Compiler::emitEqualityCode(string operand1,string operand2) //test whether operand2 equals operand1
    {
       if () //types of operands are not the same
       processError(incompatible types)
@@ -799,42 +813,42 @@ void emitEqualityCode(string operand1,string operand2) //test whether operand2 e
       push the name of the result onto operandStk
    }
    
-void emitInequalityCode(string operand1, string operand2)
+void Compiler::emitInequalityCode(string operand1, string operand2)
    {
       //adsf
    }
 
-void emitLessThanCode(string operand1, string operand2)
+void Compiler::emitLessThanCode(string operand1, string operand2)
    {
       //adsf
    }
    
-void emitLessThanOrEqualToCode(string operand1, string operand2)
+void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2)
    {
       //adsf
    }
    
-void emitGreaterThanCode(string operand1, string operand2)
+void Compiler::emitGreaterThanCode(string operand1, string operand2)
    {
       //sfdg
    }   
 
-void emitGreaterThanOrEqualToCode(string operand1, string operand2)
+void Compiler::emitGreaterThanOrEqualToCode(string operand1, string operand2)
    {
       //dfg
    }   
       
-void emitNegationCode(string operand1, string = "")
+void Compiler::emitNegationCode(string operand1, string = "")
    {
       //fsgs
    }
    
-void emitNotCode(string operand1, string = "")
+void Compiler::emitNotCode(string operand1, string = "")
    {
       //gfsdf
    }
 
-void emitAssignCode(string operand1,string operand2) //assign the value of operand1 to operand2
+void Compiler::emitAssignCode(string operand1,string operand2) //assign the value of operand1 to operand2
    {
       if types of operands are not the same
       processError(incompatible types)
@@ -850,7 +864,7 @@ void emitAssignCode(string operand1,string operand2) //assign the value of opera
       //operand2 can never be a temporary since it is to the left of ':='
     }
     
-void emitReadCode(string operand, string operand2)
+void Compiler::emitReadCode(string operand, string operand2)
    {
       string name
       while (name is broken from list (operand) and put in name != "")
@@ -867,7 +881,7 @@ void emitReadCode(string operand, string operand2)
       }
    }
    
-void emitWriteCode(string operand, string operand2)
+void Compiler::emitWriteCode(string operand, string operand2)
    {
       string name
       static bool definedStorage = false
@@ -884,30 +898,35 @@ void emitWriteCode(string operand, string operand2)
       } // end while
    }
      
-void freeTemp()
+void Compiler::freeTemp()
    {
       currentTempNo--;
       if (currentTempNo < -1)
-      processError(compiler error, currentTempNo should be ≥ –1)
+         processError("compiler error, currentTempNo should be ≥ –1")
    }
    
-string getTemp()
+   
+string Compiler::getTemp()
    {
       string temp;
       currentTempNo++;
       temp = "T" + currentTempNo;
       if (currentTempNo > maxTempNo)
-      insert(temp, UNKNOWN, VARIABLE, "", NO, 1)
-      maxTempNo++
-      return temp
+         {
+            insert(temp, UNKNOWN, VARIABLE, "", NO, 1)
+            maxTempNo++;
+            return temp;
+         }
    }
    
-string getLabel()
+//FIXME
+string Compiler::getLabel()
    {
-      //adsf
+      //what the actual fuck goes here?
    }
 
-bool isTemporary(string s) const
+
+bool Compiler::isTemporary(string s) const //determines if s represents a temporary
    {
       //adsfa
    }
