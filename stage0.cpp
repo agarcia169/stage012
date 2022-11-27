@@ -335,8 +335,8 @@ string Compiler::nextToken() //returns the next token or end of file marker
       else if (islower(ch)) 
          {
             cout << __LINE__ << endl;
-            string n(1, ch);
-            while (isNonKeyId(n) && ch != END_OF_FILE)
+            //string n(1, ch);
+            while ((islower(ch) || isdigit(ch) || ch == '_') && ch != END_OF_FILE)
                {
                   cout << __LINE__ << endl;
                   token+=ch;
@@ -486,11 +486,13 @@ bool Compiler::isSpecialSymbol(char c) const // determines if c is a special sym
 
 bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
    {
-      if (((s[0] >= 'a' && s[0] <= 'z') || (s[0] >= 'A' && s[0] <= 'Z'))) {
+      // need to find out whether or not _ can be in the beginning or just at any other space besides the beginning
+      if (isalpha(s[0])) {
       //run through rest of string
       cout << __LINE__ << endl;
          for (uint i = 1; i < s.length(); i++) {
-            if (((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9'))) {
+            // isalnum(s[i])
+            if (isalnum(s[i])) {
             cout << __LINE__ << endl;
             return false;
             }
