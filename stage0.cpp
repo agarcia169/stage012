@@ -300,7 +300,65 @@ string Compiler::ids() //token should be NON_KEY_ID
       return tempString;
    }
 
+void execStmts(); // stage 1, production 2
+{
+   
+}
 
+void execStmt(); // stage 1, production 3
+{
+   
+}
+
+void assignStmt(); // stage 1, production 4
+{
+   
+}
+
+void readStmt(); // stage 1, production 5
+{
+   
+}
+
+void writeStmt(); // stage 1, production 7
+{
+   
+}
+
+void express(); // stage 1, production 9
+{
+   
+}
+
+void expresses(); // stage 1, production 10
+{
+   
+}
+
+void term(); // stage 1, production 11
+{
+   
+}
+
+void terms(); // stage 1, production 12
+{
+   
+}
+
+void factor(); // stage 1, production 13
+{
+   
+}
+
+void factors(); // stage 1, production 14
+{
+   
+}
+
+void part(); // stage 1, production 15
+{
+   
+}
 
 
 string Compiler::nextToken() //returns the next token or end of file marker
@@ -544,6 +602,36 @@ bool Compiler::isLiteral(string s) const // determines if s is a literal
          return true;
       return false;
    }
+   
+void pushOperator(string name) //push name onto operatorStk
+   {
+      push name onto stack;
+   }
+
+void pushOperand(string name) //push name onto operandStk
+   //if name is a literal, also create a symbol table entry for it
+   {
+      if name is a literal and has no symbol table entry
+      insert symbol table entry, call whichType to determine the data type of the literal
+      push name onto stack;
+   }
+   
+string popOperator() //pop name from operatorStk
+   {
+      if operatorStk is not empty
+      return top element removed from stack;
+      else
+      processError(compiler error; operator stack underflow)
+   }
+
+string popOperand() //pop name from operandStk
+   {
+      if operandStk is not empty
+      return top element removed from stack;
+      else
+      processError(compiler error; operand stack underflow)
+   }
+
   string Compiler::genInternalName(storeTypes stype) const// determines if s is a literal
    {
 	   string newName;
@@ -567,4 +655,213 @@ bool Compiler::isLiteral(string s) const // determines if s is a literal
       }
       
       return newName;
+   }
+void emitAdditionCode(string operand1,string operand2) //add operand1 to operand2
+   {
+      if type of either operand is not integer
+      processError(illegal type)
+      if the A Register holds a temp not operand1 nor operand2 then
+      emit code to store that temp into memory
+      change the allocate entry for the temp in the symbol table to yes
+      deassign it
+      if the A register holds a non-temp not operand1 nor operand2 then deassign it
+      if neither operand is in the A register then
+      emit code to load operand2 into the A register
+      emit code to perform register-memory addition
+      deassign all temporaries involved in the addition and free those names for reuse
+      A Register = next available temporary name and change type of its symbol table entry to integer
+      push the name of the result onto operandStk
+   }
+   
+void emitSubtractionCode(string operand1,string operand2) 
+   {
+      //emit subtraction code here
+   }
+  
+void emitMultiplicationCode(string operand1,string operand2) 
+   {
+      //emit subtraction code here
+   }
+
+void emitModuloCode(string operand1, string operand2)
+   {
+      //adsf
+   }
+   
+void emitDivisionCode(string operand1,string operand2) //divide operand2 by operand1
+   {
+      if type of either operand is not integer
+      processError(illegal type)
+      if the A Register holds a temp not operand2 then
+      emit code to store that temp into memory
+      change the allocate entry for it in the symbol table to yes
+      deassign it
+      if the A register holds a non-temp not operand2 then deassign it
+      if operand2 is not in the A register
+      emit instruction to do a register-memory load of operand2 into the A register
+      emit code to extend sign of dividend from the A register to edx:eax
+      emit code to perform a register-memory division
+      deassign all temporaries involved and free those names for reuse
+      A Register = next available temporary name and change type of its symbol table entry to integer
+      push the name of the result onto operandStk
+   }
+   
+void emitAndCode(string operand1,string operand2) //and operand1 to operand2
+   {
+      if type of either operand is not boolean
+      processError(illegal type)
+      if the A Register holds a temp not operand1 nor operand2 then
+      emit code to store that temp into memory
+      change the allocate entry for the temp in the symbol table to yes
+      deassign it
+      if the A register holds a non-temp not operand1 nor operand2 then deassign it
+      if neither operand is in the A register then
+      emit code to load operand2 into the A register
+      emit code to perform register-memory and
+      deassign all temporaries involved in the and operation and free those names for reuse
+      A Register = next available temporary name and change type of its symbol table entry to boolean
+      push the name of the result onto operandStk
+   }
+   
+void emitOrCode(string operand1,string operand2) //and operand1 to operand2
+   {
+      //emit OR code
+   }
+   
+void emitEqualityCode(string operand1,string operand2) //test whether operand2 equals operand1
+   {
+      if types of operands are not the same
+      processError(incompatible types)
+      if the A Register holds a temp not operand1 nor operand2 then
+      emit code to store that temp into memory
+      change the allocate entry for it in the symbol table to yes
+      deassign it
+      if the A register holds a non-temp not operand2 nor operand1 then deassign it
+      if neither operand is in the A register then
+      emit code to load operand2 into the A register
+      emit code to perform a register-memory compare
+      emit code to jump if equal to the next available Ln (call getLabel)
+      emit code to load FALSE into the A register
+      insert FALSE in symbol table with value 0 and external name false
+      emit code to perform an unconditional jump to the next label (call getLabel should be L(n+1))
+      emit code to label the next instruction with the first acquired label Ln
+      emit code to load TRUE into A register
+      insert TRUE in symbol table with value -1 and external name true
+      emit code to label the next instruction with the second acquired label L(n+1)
+      deassign all temporaries involved and free those names for reuse
+      A Register = next available temporary name and change type of its symbol table entry to boolean
+      push the name of the result onto operandStk
+   }
+   
+void emitInequalityCode(string operand1, string operand2)
+   {
+      //adsf
+   }
+
+void emitLessThanCode(string operand1, string operand2)
+   {
+      //adsf
+   }
+   
+void emitLessThanOrEqualToCode(string operand1, string operand2)
+   {
+      //adsf
+   }
+   
+void emitGreaterThanCode(string operand1, string operand2)
+   {
+      //sfdg
+   }   
+
+void emitGreaterThanOrEqualToCode(string operand1, string operand2)
+   {
+      //dfg
+   }   
+      
+void emitNegationCode(string operand1, string = "")
+   {
+      //fsgs
+   }
+   
+void emitNotCode(string operand1, string = "")
+   {
+      //gfsdf
+   }
+
+void emitAssignCode(string operand1,string operand2) //assign the value of operand1 to operand2
+   {
+      if types of operands are not the same
+      processError(incompatible types)
+      if storage mode of operand2 is not VARIABLE
+      processError(symbol on left-hand side of assignment must have a storage mode of VARIABLE)
+      if operand1 = operand2 return
+      if operand1 is not in the A register then
+      emit code to load operand1 into the A register
+      emit code to store the contents of that register into the memory location pointed to by
+      operand2
+      set the contentsOfAReg = operand2
+      if operand1 is a temp then free its name for reuse
+      //operand2 can never be a temporary since it is to the left of ':='
+    }
+    
+void emitReadCode(string operand, string operand2)
+   {
+      string name
+      while (name is broken from list (operand) and put in name != "")
+      {
+      if name is not in symbol table
+      processError(reference to undefined symbol)
+      if data type of name is not INTEGER
+      processError("can\'t read variables of this type")
+      if storage mode of name is not VARIABLE
+      processError(attempting to read to a read-only location)
+      emit code to call the Irvine ReadInt function
+      emit code to store the contents of the A register at name
+      set the contentsOfAReg = name
+      }
+   }
+   
+void emitWriteCode(string operand, string operand2)
+   {
+      string name
+      static bool definedStorage = false
+      while (name is broken from list (operand) and put in name != "")
+      {
+      if name is not in symbol table
+      processError(reference to undefined symbol)
+      if name is not in the A register
+      emit the code to load name in the A register
+      set the contentsOfAReg = name
+      if data type of name is INTEGER or BOOLEAN
+      emit code to call the Irvine WriteInt function
+      emit code to call the Irvine Crlf function
+      } // end while
+   }
+     
+void freeTemp()
+   {
+      currentTempNo--;
+      if (currentTempNo < -1)
+      processError(compiler error, currentTempNo should be ≥ –1)
+   }
+   
+string getTemp()
+   {
+      string temp;
+      currentTempNo++;
+      temp = "T" + currentTempNo;
+      if (currentTempNo > maxTempNo)
+      insert(temp, UNKNOWN, VARIABLE, "", NO, 1)
+      maxTempNo++
+      return temp
+   }
+   
+string getLabel()
+   {
+      //adsf
+   }
+
+bool isTemporary(string s) const
+   {
+      //adsfa
    }
