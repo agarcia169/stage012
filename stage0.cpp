@@ -41,7 +41,7 @@ void Compiler::createListingHeader()
 void Compiler::parser()
    {
       nextChar();
-      cout << "shit\n";
+      cout << "enter parser zone\n";
       if (nextToken() != "program")
          processError("keyword \"program\" expected");
       prog();
@@ -142,6 +142,7 @@ void Compiler::prog() //token should be "program"
    if (token != "program")
       processError("keyword \"program\" expected");
    progStmt();
+   cout << __LINE__ << endl;
    if (token == "const")
       consts();
    if (token == "var")
@@ -309,6 +310,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
 	while (token == "")
 	{
       cout << __LINE__ << endl;
+      cout << token << endl;
       if (ch == '{') 
          {
          while (nextChar() != sourceFile.eof() || nextChar() != '}')
@@ -325,10 +327,12 @@ string Compiler::nextToken() //returns the next token or end of file marker
          }
       else if (isspace(ch)) 
          {
+            cout << __LINE__ << endl;
             nextChar();
          }
       else if (isSpecialSymbol(ch))
          {
+            cout << __LINE__ << endl;
             token = ch;
 				nextChar();
          }
@@ -367,6 +371,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
       }
     }
     cout << __LINE__ << endl;
+    cout << token << endl;
     return token;
 }
 char Compiler::nextChar()
@@ -382,6 +387,7 @@ char Compiler::nextChar()
    } 
    listingFile << ch;
    if (ch == '\n') {
+      cout << __LINE__ << endl;
       lineNo++;
       listingFile << right << setw(5) << lineNo << '|';
    }
@@ -440,7 +446,7 @@ bool Compiler::isKeyword(string s) const
 
 bool Compiler::isSpecialSymbol(char c) const // determines if c is a special symbol
    {// not sure if this is what is meant by special symbol
-   if (c == ';')
+      if (c == ';')
          return true;
       else if (c == ':')
          return true;
@@ -454,7 +460,9 @@ bool Compiler::isSpecialSymbol(char c) const // determines if c is a special sym
          return true;
       else if (c == '=')
          return true;
-      else{return false;}   
+      else
+         return false;
+        
       /*switch (c) {
          case ';':
          return true;
@@ -483,7 +491,6 @@ bool Compiler::isSpecialSymbol(char c) const // determines if c is a special sym
 */
       }
    //}
-
 bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
    {
       // need to find out whether or not _ can be in the beginning or just at any other space besides the beginning
@@ -491,8 +498,7 @@ bool Compiler::isNonKeyId(string s)const // determines if s is a non_key_id
       //run through rest of string
       cout << __LINE__ << endl;
          for (uint i = 1; i < s.length(); i++) {
-            // isalnum(s[i])
-            if (isalnum(s[i])) {
+            if (!isalnum(s[i])) {
             cout << __LINE__ << endl;
             return false;
             }
